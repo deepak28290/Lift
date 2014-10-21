@@ -1,4 +1,4 @@
-package a.service.data;
+package indwin.c3.lift.util;
 
 public enum DistanceType {
 

@@ -1,4 +1,7 @@
-package a.service.proj;
+package indwins.c3.lift.source;
+
+import indwin.c3.lift.util.PotentialGuideResponse;
+import indwin.c3.lift.util.ResponseStatus;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -20,9 +23,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.http.client.ClientProtocolException;
 import org.codehaus.jettison.json.JSONArray;
-
-import a.service.data.PotentialGuideResponse;
-import a.service.data.ResponseStatus;
 
 
 @XmlRootElement

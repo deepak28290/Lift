@@ -1,4 +1,4 @@
-package a.service.proj;
+package indwins.c3.lift.source;
 
 public class DataBaseConstants {
 	

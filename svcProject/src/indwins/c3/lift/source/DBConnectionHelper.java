@@ -1,4 +1,6 @@
-package a.service.proj;
+package indwins.c3.lift.source;
+
+import indwin.c3.lift.util.LocationDetails;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -7,8 +9,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Set;
-
-import a.service.data.LocationDetails;
 
 
 public class DBConnectionHelper {

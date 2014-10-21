@@ -1,4 +1,9 @@
-package a.service.proj;
+package indwins.c3.lift.source;
+
+import indwin.c3.lift.util.DistanceType;
+import indwin.c3.lift.util.LocationDetails;
+import indwin.c3.lift.util.PotentialGuideResponse;
+import indwin.c3.lift.util.ResponseStatus;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -14,11 +19,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-
-import a.service.data.DistanceType;
-import a.service.data.LocationDetails;
-import a.service.data.PotentialGuideResponse;
-import a.service.data.ResponseStatus;
 
 public class BusServiceHelper{
 
