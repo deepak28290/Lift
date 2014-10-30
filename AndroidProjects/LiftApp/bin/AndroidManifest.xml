@@ -24,7 +24,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/bg"
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
         android:name="LiftAppGlobal" >
@@ -51,7 +51,7 @@
 
         <activity
             android:name="com.facebook.LoginActivity"
-            android:label="@string/app_id" >
+            android:label="Lift Login" >
         </activity>
         <activity  android:label="Share your Ride!"
             android:name="FirstActivity"
@@ -61,6 +61,10 @@
          <activity
             android:name="LandingActivity"
             android:label="Lift?" >
+        </activity>
+        <activity
+            android:name="PassengerActivity"
+            android:label="Find a Lift!" >
         </activity>
     </application>
 

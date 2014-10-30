@@ -1,5 +1,6 @@
 package indwin.c3.liftapp;
 
+import indwin.c3.liftapp.utils.GPSTracker;
 
 import com.facebook.Request;
 import com.facebook.Response;
@@ -16,12 +17,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class LandingActivity extends Activity {
+	GPSTracker gps;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.landing_main);
 			
-
+		
 		Session s=Session.getActiveSession();
 		
 		  Request.newMeRequest(s, new Request.GraphUserCallback() {
@@ -37,7 +39,14 @@ public class LandingActivity extends Activity {
         			}
         	  }
         	}).executeAsync();
-		
+			gps = new GPSTracker(LandingActivity.this);
+			if (!gps.canGetLocation()) {
+				// can't get location
+							// GPS or Network is not enabled
+							// Ask user to enable GPS/network in settings
+							gps.showSettingsAlert();
+				
+			} 
 	}
 
 	@Override
@@ -68,7 +77,8 @@ public class LandingActivity extends Activity {
 	}
 
 	public void passengerClicked(View v) {
-		Toast.makeText(getApplicationContext(), "Coming Soon!", Toast.LENGTH_SHORT).show();
+		Intent i = new Intent(this, PassengerActivity.class);
+		startActivity(i);
 	}
 
 	public void profileClicked(View v) {
