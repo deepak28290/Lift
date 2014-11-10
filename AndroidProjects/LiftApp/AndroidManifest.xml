@@ -1,19 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="indwin.c3.liftapp"
+    android:installLocation="auto"
     android:versionCode="1"
     android:versionName="1.0" >
 
     <permission
-        android:name="info.androidhive.googlemapsv2.permission.MAPS_RECEIVE"
+        android:name="indwin.c3.liftapp.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
-
-    <uses-permission android:name="info.androidhive.googlemapsv2.permission.MAPS_RECEIVE" />
+    <permission
+        android:name="indwin.c3.liftapp.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+	
+    <uses-permission android:name="indwin.c3.liftapp.permission.C2D_MESSAGE" />
+    <uses-permission android:name="indwin.c3.liftapp.permission.MAPS_RECEIVE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <!-- Required to show current location -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -23,11 +30,11 @@
         android:targetSdkVersion="19" />
 
     <application
+        android:name="LiftAppGlobal"
         android:allowBackup="true"
         android:icon="@drawable/bg"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme"
-        android:name="LiftAppGlobal" >
+        android:theme="@style/AppTheme" >
         <activity
             android:name=".MainActivity"
             android:label="Lift?" >
@@ -53,12 +60,11 @@
             android:name="com.facebook.LoginActivity"
             android:label="Lift Login" >
         </activity>
-        <activity  android:label="Share your Ride!"
+        <activity
             android:name="FirstActivity"
-           >
+            android:label="Share your Ride!" >
         </activity>
-        
-         <activity
+        <activity
             android:name="LandingActivity"
             android:label="Lift?" >
         </activity>
@@ -66,6 +72,62 @@
             android:name="PassengerActivity"
             android:label="Find a Lift!" >
         </activity>
+        <activity
+            android:name="MapActivity"
+            android:label="Test" >
+        </activity>
+        <activity
+            android:name="RegIDActivity"
+            android:label="RegTest" >
+        </activity>
+        <activity
+            android:name="MyRequestsActivity"
+            android:label="View All Requests" >
+        </activity>
+        <activity
+            android:name="SidePanel"
+            android:label="Lift Menu" >
+        </activity>
+        <activity
+            android:name="RequestDetailsActivity"
+            android:label="Details" >
+        </activity>
+         <activity
+            android:name="PassengerActivity2"
+            android:label="Take a lift" >
+        </activity>
+        <activity
+            android:name="NotifLanding"
+            android:label="Lift?" >
+        </activity>
+        <activity
+            android:name="DrawerHomeActivity"
+            android:label="Lift?" >
+                  
+        </activity>
+        <activity
+            android:name="AcceptedActivity"
+            android:label="Get ready to ride!" >
+        </activity>
+
+        <receiver
+            android:name="indwin.c3.liftapp.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
+                <category android:name="indwin.c3.liftapp" />
+
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+            </intent-filter>
+
+            <category android:name="indwin.c3.liftapp" />
+        </receiver>
+
+        <service
+            android:name="indwin.c3.liftapp.GCMNotificationIntentService"
+            android:enabled="true" >
+        </service>
     </application>
 
 </manifest>

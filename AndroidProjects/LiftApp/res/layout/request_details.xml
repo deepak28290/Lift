@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/listid"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:animateLayoutChanges="true"
+    android:focusable="false"
+    android:orientation="vertical"
+    android:textColor="#FFFFFF"
+    android:visibility="visible" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:clickable="true"
+        android:focusable="false"
+        android:onClick="clickBack"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/userimage2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight=".20"
+            android:focusable="false"
+            android:src="@drawable/boy" />
+
+        <TextView
+            android:id="@+id/name2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight=".40"
+            android:focusable="false"
+            android:text="John Doe"
+            android:textSize="18sp" />
+
+        <RatingBar
+            android:id="@+id/rating2"
+            style="@style/ratingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:focusable="false"
+            android:isIndicator="false"
+            android:numStars="5"
+            android:rating="3.5" />
+    </LinearLayout>
+
+    <fragment
+        android:id="@+id/map_req2"
+        android:name="com.google.android.gms.maps.MapFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="70dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/addimage2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight=".30"
+            android:clickable="true"
+            android:focusable="false"
+            android:onClick="clickAdd"
+            android:src="@drawable/tree" />
+
+        <ImageView
+            android:id="@+id/cancelimage2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight=".30"
+            android:clickable="true"
+            android:focusable="false"
+            android:onClick="clickCancel"
+            android:src="@drawable/notree" />
+
+        <ImageView
+            android:id="@+id/profimage2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight=".30"
+            android:clickable="true"
+            android:focusable="false"
+            android:onClick="clickProf"
+            android:src="@drawable/prof_req" />
+    </LinearLayout>
+
+</RelativeLayout>

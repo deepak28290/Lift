@@ -8,9 +8,7 @@ import com.facebook.Session;
 import com.facebook.model.GraphUser;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -62,8 +60,8 @@ public class LandingActivity extends Activity {
         	  public void onCompleted(GraphUser user, Response response) {
         		  if (user != null) {
         			  Toast.makeText(getApplicationContext(), user.getName(), Toast.LENGTH_SHORT).show();
-        			
-        			}
+        			  
+        		  }
         	  }
         	}).executeAsync();
 	}
@@ -88,5 +86,9 @@ public class LandingActivity extends Activity {
 	public void paymentsClicked(View v) {
 		Toast.makeText(getApplicationContext(), "Coming Soon!", Toast.LENGTH_SHORT).show();
 	}
-
+	
+	public void requestsClicked(View v){
+		Intent i = new Intent(this, MyRequestsActivity.class);
+		startActivity(i);
+	}
 }

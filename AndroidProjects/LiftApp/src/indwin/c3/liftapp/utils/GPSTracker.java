@@ -1,5 +1,6 @@
 package indwin.c3.liftapp.utils;
 
+import indwin.c3.liftapp.LiftAppGlobal;
 import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.util.Log;
+import android.widget.Toast;
  
 public class GPSTracker extends Service implements LocationListener {
  
@@ -162,7 +164,8 @@ public class GPSTracker extends Service implements LocationListener {
         // On pressing Settings button
         alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog,int which) {
-                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            	((LiftAppGlobal) mContext.getApplicationContext()).setGpsOn(true);
+            	Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 mContext.startActivity(intent);
             }
         });
@@ -171,6 +174,10 @@ public class GPSTracker extends Service implements LocationListener {
         alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
             dialog.cancel();
+            Toast.makeText(mContext,
+					"Unable to get current location. Turn on GPS or drag start location to your pick up point!",
+					Toast.LENGTH_LONG).show();
+
             }
         });
   

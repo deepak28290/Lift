@@ -1,0 +1,29 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_alignParentBottom="true"
+    android:layout_weight=".20"
+    android:background="@drawable/lift_green"
+    android:orientation="horizontal" >
+
+    <ImageView
+        android:id="@+id/take"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight=".50"
+        android:clickable="true"
+        android:focusable="false"
+        android:onClick="takeLiftClicked"
+        android:src="@drawable/btn1_landing" />
+
+    <ImageView
+        android:id="@+id/give"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight=".50"
+        android:clickable="true"
+        android:focusable="false"
+        android:onClick="giveLiftClicked"
+        android:src="@drawable/btn2_landing" />
+
+</LinearLayout>

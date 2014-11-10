@@ -9,6 +9,7 @@ package indwin.c3.liftapp;
 
 public final class Manifest {
     public static final class permission {
-        public static final String MAPS_RECEIVE="info.androidhive.googlemapsv2.permission.MAPS_RECEIVE";
+        public static final String C2D_MESSAGE="indwin.c3.liftapp.permission.C2D_MESSAGE";
+        public static final String MAPS_RECEIVE="indwin.c3.liftapp.permission.MAPS_RECEIVE";
     }
 }

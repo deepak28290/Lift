@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-
     <!--
       <com.facebook.widget.LoginButton
         android:id="@+id/authButton"
@@ -11,8 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="30dp"
-        />
-    -->
+        /> -->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -33,45 +31,79 @@
         android:layout_marginTop="20dp"
         android:orientation="horizontal" >
 
-           <EditText
+        <EditText
             android:id="@+id/txtDateP"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight=".40"
             android:clickable="false"
             android:cursorVisible="false"
             android:focusable="false"
             android:focusableInTouchMode="false"
-            android:hint="Lift time?" 
-            android:visibility="gone">
+            android:hint="Lift time?"
+            android:onClick="datepickerClicked"
+            android:visibility="gone" >
         </EditText>
 
-        <Button
+       <!--   <Button
             android:id="@+id/btnCalendarP"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0"
+            android:layout_weight=".20"
             android:onClick="datepickerClicked"
             android:text="When do you want it?" >
-        </Button>
-
-        <Button
+        </Button>  -->
+         <ImageView
+            android:id="@+id/clock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight=".20"
+            android:clickable="true"
+            android:focusable="false"
+            android:onClick="datepickerClicked"
+            android:src="@drawable/watch" />
+      <ImageView
+            android:id="@+id/refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight=".20"
+            android:clickable="true"
+            android:focusable="false"
+            android:onClick="clickRefresh"
+            android:src="@drawable/refresh" />
+   
+        <ImageView
+            android:id="@+id/notifyme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight=".20"
+            android:clickable="true"
+            android:focusable="false"
+            android:onClick="clickNotifyMe"
+            android:src="@drawable/notification" />
+        <!--  <Button
             android:id="@+id/button3"
             android:layout_width="140dp"
             android:layout_height="wrap_content"
             android:onClick="submitClicked"
-            android:text="Notify me!"
-         />
+            android:text="Notify me!" /> -->
     </LinearLayout>
 
+    <indwin.c3.liftapp.utils.MapWrapperLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map_relative_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MainActivity" >
 
-    <fragment
-        android:id="@+id/map_passenger"
-        android:name="com.google.android.gms.maps.MapFragment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_marginTop="85dp"
-        />
+        <fragment
+            android:id="@+id/map_passenger"
+            android:name="com.google.android.gms.maps.MapFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="85dp" />
+    </indwin.c3.liftapp.utils.MapWrapperLayout>
 
 </RelativeLayout>

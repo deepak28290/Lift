@@ -1,21 +1,16 @@
 package indwin.c3.liftapp;
 
-import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -24,7 +19,6 @@ import org.json.JSONObject;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener;
 import com.google.android.gms.maps.MapFragment;
@@ -37,36 +31,32 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import indwin.c3.liftapp.R;
 import indwin.c3.liftapp.utils.GPSTracker;
-import android.app.Activity;
-import android.app.ActionBar.LayoutParams;
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-public class FirstActivity extends FragmentActivity {
+@SuppressLint("SimpleDateFormat")
+public class FirstActivity extends SidePanel {
 
 	// Google Map
 	private GoogleMap googleMap;
 	private MarkerOptions destMarker;
 	private Marker mSource;
 	private Marker mDestination;
-	private int h,m,y,d,min;
+	private int h, m, y, d, min;
 	// Variable for storing current date and time
 	private int mYear, mMonth, mDay, mHour, mMinute;
 	SupportMapFragment mMapFragment;
@@ -76,17 +66,18 @@ public class FirstActivity extends FragmentActivity {
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.firstactivity_main);
+	//	setContentView(R.layout.firstactivity_main);
+		 ViewGroup content = (ViewGroup) findViewById(R.id.frame_container);
+	        getLayoutInflater().inflate(R.layout.firstactivity_main, content, true);   
+	 
 		/*
 		 * TextView welcome = (TextView) findViewById(R.id.welcomemaps);
 		 * welcome.setText("Hello " + prefs.getString("name", null) + "!");
 		 */
 		try {
 
-			// create class object
 			gps = new GPSTracker(FirstActivity.this);
 
-		
 			// Loading map
 			initilizeMap();
 			// latitude and longitude
@@ -116,7 +107,18 @@ public class FirstActivity extends FragmentActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		try {
+			if (((LiftAppGlobal) this.getApplication()).isGpsOn()) {
+				((LiftAppGlobal) this.getApplication()).setGpsOn(false);
 
+				Thread.sleep(500);
+
+				mapAction();
+			}
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -129,13 +131,34 @@ public class FirstActivity extends FragmentActivity {
 	}
 
 	public void mapAction() {
-		googleMap.setMyLocationEnabled(true); // false to disable
+	
+		try{
+			googleMap.setMyLocationEnabled(true); // false to disable
+		
 		googleMap.getUiSettings().setMyLocationButtonEnabled(true);
 
 		// check if GPS enabled
-		
-		double latitude = gps.getLatitude();
-		double longitude = gps.getLongitude();
+		gps = new GPSTracker(FirstActivity.this);
+		double latitude, longitude;
+		// check if GPS enabled
+		if (gps.canGetLocation()) {
+
+			latitude = gps.getLatitude();
+			longitude = gps.getLongitude();
+
+		} else {
+			// can't get location
+			// GPS or Network is not enabled
+			// Ask user to enable GPS/network in settings
+
+			latitude = 12.960986;
+			longitude = 77.638732;
+			Toast.makeText(
+					getApplicationContext(),
+					"Unable to get current location. Turn on GPS or drag start location to your pick up point!",
+					Toast.LENGTH_LONG).show();
+
+		}
 		// create marker
 		MarkerOptions marker = new MarkerOptions()
 				.position(new LatLng(latitude, longitude)).title("Pickup!")
@@ -151,6 +174,7 @@ public class FirstActivity extends FragmentActivity {
 
 		googleMap.animateCamera(CameraUpdateFactory
 				.newCameraPosition(cameraPosition));
+
 		googleMap.setOnMarkerDragListener(new OnMarkerDragListener() {
 
 			@Override
@@ -172,7 +196,6 @@ public class FirstActivity extends FragmentActivity {
 
 			@Override
 			public void onMarkerDragStart(Marker arg0) {
-				// TODO Auto-generated method stub
 
 			}
 
@@ -181,7 +204,6 @@ public class FirstActivity extends FragmentActivity {
 
 			@Override
 			public void onMapLongClick(LatLng point) {
-				// TODO Auto-generated method stub
 
 				if (destMarker != null) { // if marker exists (not null or
 											// whatever)
@@ -193,7 +215,7 @@ public class FirstActivity extends FragmentActivity {
 					destMarker.snippet("My Destination Address");
 					destMarker.icon(BitmapDescriptorFactory
 							.fromResource(R.drawable.home_marker_icon));
-					
+
 					// adding marker
 					mDestination = googleMap.addMarker(destMarker);
 					googleMap.animateCamera(CameraUpdateFactory
@@ -217,6 +239,13 @@ public class FirstActivity extends FragmentActivity {
 			}
 
 		});
+		}catch(Exception e){
+			e.printStackTrace();
+			Toast.makeText(getApplicationContext(), "Google Play Services not enabled!",
+
+					Toast.LENGTH_SHORT).show();
+
+		}
 	}
 
 	public void datepickerClicked(View v) {
@@ -243,7 +272,7 @@ public class FirstActivity extends FragmentActivity {
 									+ min);
 							txt.setVisibility(View.VISIBLE);
 							txt.setWidth(100);
-							Button bt=(Button) findViewById(R.id.btnCalendar);
+							Button bt = (Button) findViewById(R.id.btnCalendar);
 							bt.setText("Change lift timings");
 
 						}
@@ -274,33 +303,59 @@ public class FirstActivity extends FragmentActivity {
 
 		}
 	}
-	
-
 
 	public void submitClicked(View v) {
+		final Handler handler = new Handler(new Handler.Callback() {
+
+			@Override
+			public boolean handleMessage(Message msg) {
+
+				Toast toast = Toast.makeText(
+						getApplicationContext(),
+						msg.obj.toString(), Toast.LENGTH_LONG);
+				toast.setGravity(Gravity.CENTER
+						| Gravity.CENTER_HORIZONTAL, 0, 0);
+				toast.show();
+
+				return false;
+			}
+		});
 		try {
 			TextView s_address = (TextView) findViewById(R.id.sourceaddress);
 			TextView d_address = (TextView) findViewById(R.id.destinationaddress);
 			TextView f_date = (TextView) findViewById(R.id.txtDate);
 			String str = f_date.getText().toString().trim();
-			SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-			Date date;
-			date = df.parse(str);
-			long epoch = date.getTime();
-			
-			if (s_address.getText().toString().trim().equals("")
-					|| d_address.getText().toString().trim().equals("")
-					|| f_date.getText().toString().trim().equals("")
-			) {
-				// Your piece of code for example
+				
+			if(mDestination==null){
+				
 				Toast toast = Toast.makeText(getApplicationContext(),
-						"Provide complete trip details!", Toast.LENGTH_LONG);
+						"Long Tap on your exact destination on the Map!  ", Toast.LENGTH_LONG);
+				toast.setGravity(Gravity.CENTER | Gravity.CENTER_HORIZONTAL, 0,
+						0);
+				toast.show();
+			}else if(mSource==null){
+				
+				Toast toast = Toast.makeText(getApplicationContext(),
+						"Error. Please go back and retry! ", Toast.LENGTH_LONG);
+				toast.setGravity(Gravity.CENTER | Gravity.CENTER_HORIZONTAL, 0,
+						0);
+				toast.show();
+			}else	if (s_address.getText().toString().trim().equals("")
+					|| d_address.getText().toString().trim().equals("")
+					|| f_date.getText().toString().trim().equals("")) {
+				
+				Toast toast = Toast.makeText(getApplicationContext(),
+						"Add Landmarks and choose time to Lock your ride!", Toast.LENGTH_LONG);
 				toast.setGravity(Gravity.CENTER | Gravity.CENTER_HORIZONTAL, 0,
 						0);
 				toast.show();
 			} else {
 				// submit data to server
 				try {
+					SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+					Date date;
+					date = df.parse(str);
+					long epoch = date.getTime();
 
 					final JSONObject riderPayload = new JSONObject();
 					/*
@@ -311,8 +366,8 @@ public class FirstActivity extends FragmentActivity {
 					 * "srcgeocode"="49.2569777,-123.123904",
 					 * "destgeocode"="37.7577,-122.4376", "starttime"="" }
 					 */
-
-					riderPayload.put("userID", new Random().nextInt(1000));
+					
+					riderPayload.put("userID",((LiftAppGlobal)this.getApplication()).getUserId());
 					riderPayload.put("userType", "rider");
 					riderPayload.put("source", s_address.getText().toString()
 							.trim());
@@ -331,29 +386,15 @@ public class FirstActivity extends FragmentActivity {
 							+ mSource.getSnippet());
 					Log.d("LIFT", mDestination.getPosition().toString() + "  "
 							+ mSource.getSnippet());
-					final Handler handler = new Handler(new Handler.Callback() {
-
-						@Override
-						public boolean handleMessage(Message msg) {
-
-								Toast toast = Toast.makeText(
-										getApplicationContext(),
-										msg.obj.toString(),
-										Toast.LENGTH_LONG);
-								toast.setGravity(Gravity.CENTER
-										| Gravity.CENTER_HORIZONTAL, 0, 0);
-								toast.show();
-
-							return false;
-						}
-					});
-
+					
 					new Thread() {
 						public void run() {
 							try {
 								HttpClient myClient = new DefaultHttpClient();
+								
+								String call_url =getApplicationContext().getString(R.string.server_url)+ "/user/addonlineuser";
 								HttpPost post = new HttpPost(
-										"http://192.168.1.6:8080/svcProject/user/addonlineuser");
+										call_url);
 								post.setHeader("Content-type",
 										"application/json");
 								StringEntity entity = new StringEntity(
@@ -362,35 +403,50 @@ public class FirstActivity extends FragmentActivity {
 								post.setEntity(entity);
 								HttpResponse response = myClient.execute(post);
 								HttpEntity ent = response.getEntity();
-								String responseString = EntityUtils.toString(ent, "UTF-8");
+								String responseString = EntityUtils.toString(
+										ent, "UTF-8");
 								if (response.getStatusLine().getStatusCode() != 200) {
 
 									Log.e("Lift", "Call to Server Failed");
+									Message m_fail = new Message();
+									m_fail.obj = "failed";
+
+									handler.sendMessage(m_fail);
 								} else {
 									Log.i("Lift", "Call to Server Success");
-									Log.i("Lift", "Response"
-											+ responseString);
+									Log.i("Lift", "Response" + responseString);
 									Message msg = new Message();
-									msg.obj = responseString;
-									String a=responseString;
-									
+									msg.obj = "Ride succesfully Locked!";
+									//String a = responseString;
+
 									handler.sendMessage(msg);
 								}
 
 							} catch (IOException e) {
 								e.getMessage();
 								e.printStackTrace();
+								Message m_fail = new Message();
+								m_fail.obj = "failed";
+
+								handler.sendMessage(m_fail);
 							}
 						}
 					}.start();
 
 				} catch (Exception e) {
+					Message m_fail = new Message();
+					m_fail.obj = "failed";
 
+					handler.sendMessage(m_fail);
 				}
 			}
-		} catch (ParseException e1) {
-			// TODO Auto-generated catch block
+		} catch (Exception e1) {
 			e1.printStackTrace();
+			Message m_fail = new Message();
+			m_fail.obj = "Please check your input details!";
+
+			handler.sendMessage(m_fail);
+			
 		}
 	}
 }

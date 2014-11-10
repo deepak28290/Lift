@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/iw_bg"
+    android:gravity="center_horizontal"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="300dp"
+        android:layout_height="70dp" >
+     <Button
+        android:id="@+id/cancelButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" Yeah, Cancel! "
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_below="@+id/image"
+        />
+
+       <Button
+           android:id="@+id/backButton1"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_alignBaseline="@+id/cancelButton"
+           android:layout_alignBottom="@+id/cancelButton"
+           android:layout_toRightOf="@+id/cancelButton"
+           android:text="No, Wait! " />
+ 
+</RelativeLayout>
+</LinearLayout>
