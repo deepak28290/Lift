@@ -6,7 +6,7 @@
     <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
     <init-param>
       <param-name>com.sun.jersey.config.property.packages</param-name>
-      <param-value>a.service.proj</param-value>
+      <param-value>indwins.c3.lift.source</param-value>
     </init-param>
      <init-param>
         <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
@@ -16,6 +16,6 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>Jersey REST Service</servlet-name>
-    <url-pattern>/rest/*</url-pattern>
+    <url-pattern>/*</url-pattern>
   </servlet-mapping>
 </web-app> 
