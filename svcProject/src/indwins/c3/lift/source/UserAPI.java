@@ -21,31 +21,35 @@ public class UserAPI
 	{
 		return "Lift Version 1.0";
 	}
+
+    @GET
+    @Path("/isnewuser")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response isNewUser(@QueryParam("userID") String userId) throws Exception
+    {
+    	System.out.println("user Id = " + userId);
+		JSONObject result = UserManagement.isNewUser(userId);
+		return Response.status(200).entity(result).build();
+    }
+    
     @POST
-    @Path("/adduser")
+    @Path("/updateprofile")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addUser(User usr) throws Exception
+    public Response updateUserProfile(User newUser) throws Exception
     {
-    	String output;
-    	String userName = usr.getName();
-    	String docType = usr.getDocType();
-    	String docID = usr.getDocId();
-    	String fbUserID = usr.getFbUserID();
-		output = UserManagement.addUser(userName, docType, docID , fbUserID);
-		return Response.status(200).entity(output).build();
-     }
+		JSONObject result = UserManagement.updateUserProfile(newUser);
+		return Response.status(200).entity(result).build();
+    }
     
     @GET
-    @Path("/getuser")
+    @Path("/getprofile")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUser(@QueryParam("userID") String uid) throws Exception
+    public Response getUser(@QueryParam("userID") String userId) throws Exception
     {
-    	String output;
-    	UserManagement um = new UserManagement();
-		output = um.getUser(uid);
+    	JSONObject output = UserManagement.getUser(userId);
 		return Response.status(200).entity(output).build();
-     }
+    }
     
     @GET
     @Path("/getnn")
