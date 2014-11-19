@@ -198,4 +198,10 @@ public class DBHelper
     	System.out.println("query output = " + obj);
        	return obj;
     }
+	public static JSONObject executePreparedStatement(PreparedStatement pre) throws SQLException
+	{
+		JSONObject resObj = new JSONObject();
+		pre.executeUpdate();
+		return resObj;
+	}
 }

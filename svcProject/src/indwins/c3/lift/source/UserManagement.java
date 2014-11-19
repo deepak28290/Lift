@@ -1,6 +1,9 @@
 package indwins.c3.lift.source;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Date;
 
@@ -284,6 +287,45 @@ public class UserManagement
 		{
 			resObj.put("status", "failure");
 			resObj.put("message", "cannot update profile dure to server error, please try later");
+		}
+		return resObj;
+	}
+
+	public static JSONObject updateUserPhoto(String fbuserID, String docType, InputStream imageFileInputStream) throws JSONException 
+	{
+		JSONObject resObj = new JSONObject();
+		String tableName = "";
+		String colName = "";
+		if(docType.toUpperCase().equals("PHOTO"))
+		{
+			tableName = colName = "user_photo";
+		}
+		else if(docType.toUpperCase().equals("PAN"))
+		{
+			tableName = colName = "user_pancard";
+		}
+		else if(docType.toUpperCase().equals("DL"))
+		{
+			tableName = colName = "user_dl";
+		}
+		Connection con = null;
+		try
+		{
+			con = DBHelper.createConnection();
+			PreparedStatement pre = con.prepareStatement("replace into " + tableName + " (fbuserID, " + colName + ") values(?,?)");
+			pre.setString(1,fbuserID);
+			pre.setBinaryStream(2,imageFileInputStream);
+			DBHelper.executePreparedStatement(pre);
+			resObj.put("status", "success");
+			resObj.put("message", "profile successfully updated");
+			pre.close();
+			con.close(); 
+		}
+		catch (Exception e1)
+		{
+			resObj.put("status", "failure");
+			resObj.put("message", "cannot update profile due to server error.");
+			System.out.println("error 1 ="+e1.getMessage());
 		}
 		return resObj;
 	}
