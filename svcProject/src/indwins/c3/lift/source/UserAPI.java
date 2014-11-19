@@ -1,7 +1,5 @@
 package indwins.c3.lift.source;
 
-import java.io.InputStream;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -10,11 +8,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
-
-import com.sun.jersey.core.header.FormDataContentDisposition;
-import com.sun.jersey.multipart.FormDataParam;
 
 @Path("/user")
 public class UserAPI 
@@ -46,23 +42,6 @@ public class UserAPI
 		return Response.status(200).entity(result).build();
     }
     
-    @POST
-    @Path("/updatephoto")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response updatePhoto(@FormDataParam("fbuserID") String fbuserID,
-    							@FormDataParam("docType") String docType,
-    							@FormDataParam("imagefile") InputStream imageFileInputStream,
-    							@FormDataParam("imagefile") FormDataContentDisposition fileDetail) throws Exception
-    {
-    	System.out.println("fbuserId = "+ fbuserID);
-    	System.out.println("docType = "+ docType);
-    	System.out.println("InputStream = "+ imageFileInputStream);
-    	System.out.println("FormDataContentDisposition = "+ fileDetail);
-		JSONObject result = UserManagement.updateUserPhoto(fbuserID, docType, imageFileInputStream);
-		return Response.status(200).entity(result).build();
-    }
-    
     @GET
     @Path("/getprofile")
     @Produces(MediaType.APPLICATION_JSON)
@@ -70,17 +49,6 @@ public class UserAPI
     {
     	JSONObject output = UserManagement.getUser(userId);
 		return Response.status(200).entity(output).build();
-    }
-    
-    @GET
-    @Path("/getphoto")
-    @Produces("image/*")
-    public Response getImage(@QueryParam("userID") String imageId) 
-    {
-
-
-        return Response.noContent().build();
-
     }
     
     @GET
