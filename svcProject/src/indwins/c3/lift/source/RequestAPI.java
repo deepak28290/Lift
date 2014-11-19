@@ -60,4 +60,14 @@ public class RequestAPI
 		JSONArray result = RequestManagement.getMyRequest(uid, reqType);
 		return Response.status(200).entity(result).build();
     }
+    
+    @GET
+    @Path("/getrequestdetails")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getRequestDetails(@QueryParam("id") long reqId) throws Exception
+    {
+    	System.out.println("request Id =" + reqId);
+		JSONObject result = RequestManagement.getRequestDetails(reqId);
+		return Response.status(200).entity(result).build();
+    }
 }

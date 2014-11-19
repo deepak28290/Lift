@@ -106,8 +106,9 @@ public class RequestManagement
 		method.addRequestHeader("Content-Type", "application/json");
 		method.addRequestHeader("Authorization", "key = AIzaSyDTE65FLjtlVV_hXVG5c60vuEtvFcKpv60");
 		method.setRequestEntity(new StringRequestEntity(gcmJObj.toString(), "application/json", "UTF-8"));
-		//System.out.println("Sending 'POST' request to URL : " + gcmUrl);
+		System.out.println("'PUSH' notificatoin sent to URL : " + gcmUrl);
 		obj = HelperUtil.sendPostRequest(method);
+		System.out.println("'PUSH' notificatoin : " + gcmUrl);
 		return obj;
 	}
 	
@@ -364,5 +365,51 @@ public class RequestManagement
 			reqObj = DBHelper.getDBMultiple(requestQuery);
 		}
 		return reqObj;
+	}
+
+	public static JSONObject getRequestDetails(long reqID) throws JSONException 
+	{
+		JSONObject resObj = new JSONObject();
+		String reqType = "";
+		String requesterTable = "";
+		String accepterTable = "";
+		String reqQuery = "select requesterType, requesterID, accepterID from active_requests where requestID = " + reqID;
+		JSONObject reqObj = DBHelper.getDBSingle(reqQuery);
+		if (reqObj.length() > 0)
+		{
+			reqType = reqObj.getString("requesterType");
+			if(reqType.equals("passenger"))
+			{
+				requesterTable = "online_passenger";
+				accepterTable = "online_rider";
+			}
+			else if(reqType.equals("rider"))
+			{
+				requesterTable = "online_rider";
+				accepterTable = "online_passenger";
+			}
+			String requestQuery =  	"select req.source selfSource, req.destination selfDestination, "+
+									"req.srcgeocode selfSrcGeoCode, req.destgeocode selfDestGeoCode, "+
+									"req.starttime selfStartTime, "+
+									"acc.source otherSource, acc.destination otherDestination, "+
+									"acc.srcgeocode otherSrcGeoCode, acc.destgeocode otherDestGeoCode, "+
+									"acc.starttime otherStartTime, "+
+									"ar.requesttime requestTime, ar.requestID requestId, ar.requeststatus requestStatus "+
+									"from active_requests ar, " + requesterTable + " req, " + accepterTable + " acc " +
+									"where ar.requestID = " + reqID + " and "+
+									"ar.requesterID = req.userID and ar.accepterID = acc.userID";
+			JSONObject obj = DBHelper.getDBSingle(requestQuery);
+			resObj.put("status", "success");
+			resObj.put("message", "request details successfully fetched");
+			resObj.put("result", obj);
+		}
+		else
+		{
+			resObj.put("status", "failure");
+			resObj.put("message", "request ID not found");
+			resObj.put("result", new JSONObject());
+		}
+
+		return resObj;
 	}
 }

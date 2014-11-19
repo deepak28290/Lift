@@ -1,6 +1,9 @@
 package indwins.c3.lift.source;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Date;
 
@@ -35,10 +38,24 @@ public class UserManagement
 		}
 	}
 	
-	public String getUser(String uid)
+	public static JSONObject getUser(String uid) throws JSONException
 	{
-		String query= "select * from user_details where fbuserID = "+uid;
-		return DBHelper.getDBSingle(query).toString();
+		JSONObject resObj = new JSONObject();
+		String userQuery = "select * from user_details where fbuserID = " + uid;
+		JSONObject userObj = DBHelper.getDBSingle(userQuery);
+		if(userObj.length() > 0)
+		{
+			resObj.put("status", "success");
+			resObj.put("message", "Successfully fetched user details.");
+			resObj.put("result", userObj);
+		}
+		else
+		{
+			resObj.put("status", "failure");
+			resObj.put("message", "User details not found");
+			resObj.put("result", userObj);
+		}
+		return resObj;
 	}
 	
 	public static JSONObject addOnlineUser(String userType, long userID, String source, String destination, 
@@ -227,5 +244,89 @@ public class UserManagement
 			
 		}		
 		return obj.toString();
+	}
+
+	public static JSONObject isNewUser(String userId) throws JSONException 
+	{
+		JSONObject resObj = new JSONObject();
+		String userQuery = "select fbuserID from user_details where fbuserID = \"" + userId + "\"";
+		JSONObject userObj = DBHelper.getDBSingle(userQuery);
+		if(userObj.length() > 0)
+		{
+			resObj.put("status", "success");
+			resObj.put("newuser","0");
+			resObj.put("message", "user already exists");
+		}
+		else
+		{
+			resObj.put("status", "success");
+			resObj.put("newuser","1");
+			resObj.put("message", "user not reqistered");
+		}
+		return resObj;
+	}
+
+	public static JSONObject updateUserProfile(User newUser) throws SQLException, JSONException 
+	{
+		JSONObject resObj = new JSONObject();
+		String name = newUser.getName();
+		String fbUserID = newUser.getFbUserID();
+		String emailID = newUser.getEmailID();
+		String gender = newUser.getGender();
+		String phone = newUser.getPhone();
+		
+		String userQuery =  "replace into user_details (fbuserID, userName, emailID, gender, phone) values (\""+
+							fbUserID + "\",\"" + name + "\",\"" + emailID + "\",\"" + gender + "\",\"" + phone + "\")";
+		int rows = DBHelper.addDBSingle(userQuery);
+		if( rows > 0)
+		{
+			resObj.put("status", "success");
+			resObj.put("message", "profile successfully updated");
+		}
+		else
+		{
+			resObj.put("status", "failure");
+			resObj.put("message", "cannot update profile dure to server error, please try later");
+		}
+		return resObj;
+	}
+
+	public static JSONObject updateUserPhoto(String fbuserID, String docType, InputStream imageFileInputStream) throws JSONException 
+	{
+		JSONObject resObj = new JSONObject();
+		String tableName = "";
+		String colName = "";
+		if(docType.toUpperCase().equals("PHOTO"))
+		{
+			tableName = colName = "user_photo";
+		}
+		else if(docType.toUpperCase().equals("PAN"))
+		{
+			tableName = colName = "user_pancard";
+		}
+		else if(docType.toUpperCase().equals("DL"))
+		{
+			tableName = colName = "user_dl";
+		}
+		Connection con = null;
+		try
+		{
+			con = DBHelper.createConnection();
+			PreparedStatement pre = con.prepareStatement("replace into " + tableName + " (fbuserID, " + colName + ") values(?,?)");
+			pre.setString(1,fbuserID);
+			pre.setBinaryStream(2,imageFileInputStream);
+			DBHelper.executePreparedStatement(pre);
+			resObj.put("status", "success");
+			resObj.put("message", "profile successfully updated");
+			pre.close();
+			con.close(); 
+		}
+		catch (Exception e1)
+		{
+			resObj.put("status", "failure");
+			resObj.put("message", "cannot update profile due to server error.");
+			System.out.println("error 1 ="+e1.getMessage());
+		}
+		return resObj;
 	}
 }
