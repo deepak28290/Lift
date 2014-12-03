@@ -1,5 +1,6 @@
 package indwins.c3.lift.source;
 
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -198,10 +199,20 @@ public class DBHelper
     	System.out.println("query output = " + obj);
        	return obj;
     }
-	public static JSONObject executePreparedStatement(PreparedStatement pre) throws SQLException
+	public static int executePreparedStatement(PreparedStatement pre) throws SQLException
 	{
-		JSONObject resObj = new JSONObject();
-		pre.executeUpdate();
-		return resObj;
+		return pre.executeUpdate();
+	}
+
+
+	public static InputStream selectPreparedStatement(PreparedStatement pre, String colName) throws SQLException 
+	{
+		ResultSet rs = pre.executeQuery();
+		InputStream resultStream = null;
+		while(rs.next()) 
+		{
+			resultStream = rs.getBinaryStream(colName);
+		}
+		return resultStream;
 	}
 }

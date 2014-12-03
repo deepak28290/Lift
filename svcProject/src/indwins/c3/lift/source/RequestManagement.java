@@ -311,14 +311,16 @@ public class RequestManagement
 				requestQuery =  "select olr.source selfSource, olr.destination selfDestination, "+
 								"olr.srcgeocode selfSrcGeoCode, olr.destgeocode selfDestGeoCode, "+
 								"olr.starttime selfStartTime, "+
-								"opr.source otherSource, opr.destination otherDestination, "+
-								"opr.srcgeocode otherSrcGeoCode, opr.destgeocode otherDestGeoCode, "+
-								"opr.starttime otherStartTime, "+
+								"olp.source otherSource, olp.destination otherDestination, "+
+								"olp.srcgeocode otherSrcGeoCode, olp.destgeocode otherDestGeoCode, "+
+								"olp.starttime otherStartTime, "+
+								"usr.userName otherUserName, usr.fbuserID otherFbUserID, usr.phone otherPhone, " +
 								"ar.requesttime requestTime, ar.requestID requestId, ar.requeststatus requestStatus "+
-								"from active_requests ar, online_rider olr, online_passenger opr " +
-								"where ar."+ senderIdCol +" = " + "olr.userID " +
-							 	"and ar."+ receiverIdCol +" = " + "opr.userID " +
-							 	"and ar." + senderIdCol +" = "+ id;
+								"from active_requests ar, online_rider olr, online_passenger olp, user_details usr " +
+								"where ar."+ senderIdCol + " = " + "olr.userID " +
+							 	"and ar."+ receiverIdCol + " = " + "olp.userID " +
+								"and usr.fbuserID  = olp.userID " +
+							 	"and ar." + senderIdCol + " = " + id;
 			}
 			else if(userType.equals("passenger") && reqType.equals("sent"))
 			{
@@ -328,10 +330,12 @@ public class RequestManagement
 								"olr.source otherSource, olr.destination otherDestination, "+
 								"olr.srcgeocode otherSrcGeoCode, olr.destgeocode otherDestGeoCode, "+
 								"olr.starttime otherStartTime, "+
-								"ar.requesttime requestTime, ar.requestID requestId, ar.requeststatus requestStatus "+
-								"from active_requests ar, online_passenger olp, online_rider olr "+
+								"usr.userName otherUserName, usr.fbuserID otherFbUserID, usr.phone otherPhone, " +
+								"ar.requesttime requestTime, ar.requestID requestId, ar.requeststatus requestStatus " +
+								"from active_requests ar, online_passenger olp, online_rider olr, user_details usr " +
 								"where ar."+ senderIdCol +" = " + "olp.userID "+
 								"and ar."+ receiverIdCol +" = " + "olr.userID "+
+								"and usr.fbuserID = olr.userID " +
 								"and ar." + senderIdCol +" = "+ id;
 			}
 			else if(userType.equals("rider") && reqType.equals("received"))
@@ -342,11 +346,13 @@ public class RequestManagement
 								"olr.source otherSource , olr.destination otherDestination , "+
 								"olr.srcgeocode otherSrcGeoCode, olr.destgeocode otherDestGeoCode, "+
 								"olr.starttime otherStartTime, "+
-								"ar.requesttime requestTime, ar.requestID requestId, ar.requeststatus requestStatus "+
-								"from active_requests ar, online_passenger  olp, online_rider olr "+
+								"usr.userName otherUserName, usr.fbuserID otherFbUserID, usr.phone otherPhone, " +
+								"ar.requesttime requestTime, ar.requestID requestId, ar.requeststatus requestStatus " +
+								"from active_requests ar, online_passenger  olp, online_rider olr, user_details usr " +
 								"where ar."+ senderIdCol +" = " + "olp.userID "+
 								"and ar."+ receiverIdCol +" = " + "olr.userID "+
-								"and ar." + senderIdCol +" = "+ id;
+								"and usr.fbuserID = olr.userID " +
+								"and ar." + senderIdCol + " = " + id;
 			}
 			else if(userType.equals("passenger") && reqType.equals("received"))
 			{
@@ -356,10 +362,12 @@ public class RequestManagement
 								"olp.source otherSource, olp.destination otherDestination, "+
 								"olp.srcgeocode otherSrcGeoCode, olp.destgeocode otherDestGeoCode, "+
 								"olp.starttime otherStartTime, "+
-								"ar.requesttime requestTime, ar.requestID requestId, ar.requeststatus requestStatus "+
-								"from active_requests ar, online_rider olr, online_passenger olp "+
+								"usr.userName otherUserName, usr.fbuserID otherFbUserID, usr.phone otherPhone, " +
+								"ar.requesttime requestTime, ar.requestID requestId, ar.requeststatus requestStatus " +
+								"from active_requests ar, online_rider olr, online_passenger olp, user_details usr "+
 								"where ar."+ senderIdCol +" = " + "olr.userID "+
 								"and ar."+ receiverIdCol +" = " + "olp.userID "+
+								"and usr.fbuserID = olp.userID " +
 								"and ar." + senderIdCol +" = "+ id;
 			}
 			reqObj = DBHelper.getDBMultiple(requestQuery);
@@ -394,10 +402,13 @@ public class RequestManagement
 									"acc.source otherSource, acc.destination otherDestination, "+
 									"acc.srcgeocode otherSrcGeoCode, acc.destgeocode otherDestGeoCode, "+
 									"acc.starttime otherStartTime, "+
-									"ar.requesttime requestTime, ar.requestID requestId, ar.requeststatus requestStatus "+
-									"from active_requests ar, " + requesterTable + " req, " + accepterTable + " acc " +
+									"usr.userName otherUserName, usr.fbuserID otherFbUserID, usr.phone otherPhone, " + 
+									"usr.emailID otherEmailID, usr.gender otherGender, "+
+									"ar.requesttime requestTime, ar.requestID requestId, ar.requeststatus requestStatus " +
+									"from active_requests ar, " + requesterTable + " req, " + accepterTable + " acc, user_details usr " + 
 									"where ar.requestID = " + reqID + " and "+
-									"ar.requesterID = req.userID and ar.accepterID = acc.userID";
+									"ar.requesterID = req.userID and ar.accepterID = acc.userID " +
+									"and usr.fbuserID = acc.userID";
 			JSONObject obj = DBHelper.getDBSingle(requestQuery);
 			resObj.put("status", "success");
 			resObj.put("message", "request details successfully fetched");

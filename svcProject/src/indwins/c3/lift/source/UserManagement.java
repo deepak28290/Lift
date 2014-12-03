@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.Random;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -41,7 +42,7 @@ public class UserManagement
 	public static JSONObject getUser(String uid) throws JSONException
 	{
 		JSONObject resObj = new JSONObject();
-		String userQuery = "select * from user_details where fbuserID = " + uid;
+		String userQuery = "select * from user_details where fbuserID = \"" + uid + "\"";
 		JSONObject userObj = DBHelper.getDBSingle(userQuery);
 		if(userObj.length() > 0)
 		{
@@ -200,14 +201,14 @@ public class UserManagement
 						}
 					}
 				}
-				try 
+/*				try 
 				{
 					addOnlineUser(userType, userID, "", "", userSrcGeoCode, userDestGeoCode, userStartTime);
 				} 
 				catch (SQLException e) 
 				{
 					e.printStackTrace();
-				}
+				}*/
 			} 
 			else 
 			{
@@ -291,7 +292,7 @@ public class UserManagement
 		return resObj;
 	}
 
-	public static JSONObject updateUserPhoto(String fbuserID, String docType, InputStream imageFileInputStream) throws JSONException 
+	public static JSONObject updateUserPhoto(String fbuserID, String docType, InputStream imageFileInputStream) throws JSONException, SQLException 
 	{
 		JSONObject resObj = new JSONObject();
 		String tableName = "";
@@ -309,17 +310,24 @@ public class UserManagement
 			tableName = colName = "user_dl";
 		}
 		Connection con = null;
+		PreparedStatement pre = null;
 		try
 		{
 			con = DBHelper.createConnection();
-			PreparedStatement pre = con.prepareStatement("replace into " + tableName + " (fbuserID, " + colName + ") values(?,?)");
+			pre = con.prepareStatement("replace into " + tableName + " (fbuserID, " + colName + ") values(?,?)");
 			pre.setString(1,fbuserID);
 			pre.setBinaryStream(2,imageFileInputStream);
-			DBHelper.executePreparedStatement(pre);
-			resObj.put("status", "success");
-			resObj.put("message", "profile successfully updated");
-			pre.close();
-			con.close(); 
+			int count = DBHelper.executePreparedStatement(pre);
+			if( count > 0)
+			{
+				resObj.put("status", "success");
+				resObj.put("message", "profile successfully updated");
+			}
+			else
+			{
+				resObj.put("status", "failure");
+				resObj.put("message", "cannot update profile due to server error.");
+			}
 		}
 		catch (Exception e1)
 		{
@@ -327,6 +335,414 @@ public class UserManagement
 			resObj.put("message", "cannot update profile due to server error.");
 			System.out.println("error 1 ="+e1.getMessage());
 		}
+		finally
+		{
+			pre.close();
+			con.close(); 
+		}
+		return resObj;
+	}
+
+	public static InputStream getPhoto(String userID, String docType) throws SQLException 
+	{
+		String tableName = "";
+		String colName = "";
+		InputStream ipStream = null;
+		PreparedStatement pre = null;
+		
+		if(docType.toUpperCase().equals("PHOTO"))
+		{
+			tableName = colName = "user_photo";
+		}
+		else if(docType.toUpperCase().equals("PAN"))
+		{
+			tableName = colName = "user_pancard";
+		}
+		else if(docType.toUpperCase().equals("DL"))
+		{
+			tableName = colName = "user_dl";
+		}
+		Connection con = null;
+		try
+		{
+			con = DBHelper.createConnection();
+			pre = con.prepareStatement("select " + colName + " from " + tableName + " where fbuserID" +
+					" = ?");
+			pre.setString(1,userID);
+			ipStream = DBHelper.selectPreparedStatement(pre, colName);
+		}
+		catch (Exception e1)
+		{
+			System.out.println("error 1 ="+e1.getMessage());
+		}
+		finally
+		{
+			pre.close();
+			con.close(); 
+		}
+		return ipStream;
+	}
+
+	public static JSONObject sendEmailVerifyCode(String id) throws JSONException, SQLException
+	{
+		JSONObject resObj = new JSONObject();
+		String from = "admin@elift.in";
+		String subject = "Lift: verify your email";
+		String to = "";
+		String body = "";
+		String emailQuery = "select emailID from user_details where fbuserID = \"" + id +"\"";
+		JSONObject emailObj = DBHelper.getDBSingle(emailQuery);
+		if(emailObj.length() > 0)
+		{
+			Random rand = new Random();
+		    int randomNum = rand.nextInt((99999 - 10000) + 1) + 10000;
+			to = emailObj.getString("emailID");
+			body = "Hi \n\nYour email verificatoin code is " + randomNum +" \n\nRegards\nLift Admin";
+			String codeQuery = "replace into verify_email (fbuserID, emailID, verification_code, code_validity) " +
+								"values (\""+ id + "\", \"" + to + "\", \"" + randomNum + "\", " + System.currentTimeMillis() +")";
+			int rows = DBHelper.addDBSingle(codeQuery);
+			if (rows > 0)
+			{
+				System.out.println("To = " + to);
+				System.out.println("From = " + from);
+				System.out.println("Subject = " + subject);
+				System.out.println("Body = " + body);
+				//HelperUtil.sendMail(from, to, subject, body );
+				resObj.put("status", "success");
+				resObj.put("message", "Email verification code sent successfully");
+			}
+			else
+			{
+				resObj.put("status", "failure");
+				resObj.put("message", "Could not generate email verification code. Please try later");
+			}
+		    
+		}
+		else
+		{
+			resObj.put("status", "failure");
+			resObj.put("message", "Email Id not found. Please update email Id before verification");
+		}
+		return resObj;
+	}
+
+	public static JSONObject verifyEmail(String id, String userCode) throws JSONException, SQLException 
+	{
+		JSONObject resObj = new JSONObject();
+		String from = "admin@elift.in";
+		String subject = "Congrats: Your email verified successfully";
+		String to = "";
+		String body = "";
+		String internalCode = "";
+		String emailQuery = "select emailID, verification_code from verify_email where fbuserID = \"" + id +"\"";
+		JSONObject emailObj = DBHelper.getDBSingle(emailQuery);
+		if(emailObj.length() > 0)
+		{
+			internalCode = emailObj.getString("verification_code");
+			to = emailObj.getString("emailID");
+			if(internalCode.equals(userCode))
+			{
+				body = "Hi \n\nCongrats!! Your email verified successfully \n\nRegards\nLift Admin";
+				String codeQuery = "delete from verify_email where fbuserID = \"" + id + "\"";
+				int rows = DBHelper.addDBSingle(codeQuery);
+				if (rows > 0)
+				{
+					System.out.println("To = " + to);
+					System.out.println("From = " + from);
+					System.out.println("Subject = " + subject);
+					System.out.println("Body = " + body);
+					//HelperUtil.sendMail(from, to, subject, body );
+					String verifyStatusQuery = "insert into verification_status (fbuserID, email_status) " +
+												"values ( " + id + ", 1) on duplicate key update email_status = 1";
+					int rcount = DBHelper.addDBSingle(verifyStatusQuery);
+					if (rcount > 0)
+					{
+						resObj.put("status", "success");
+						resObj.put("message", "Email verified successfully");
+					}
+					else
+					{
+						resObj.put("status", "failure");
+						resObj.put("message", "Error occured while verifying email, Please try again");
+					}
+
+				}
+				else
+				{
+					resObj.put("status", "failure");
+					resObj.put("message", "Could not flush the email verification code.");
+				}
+			}
+			else
+			{
+				resObj.put("status", "failure");
+				resObj.put("message", "Sorry code doesnot match. Please retry");
+			}
+		}
+		else
+		{
+			resObj.put("status", "failure");
+			resObj.put("message", "No verification code found. Please sent verication code before verification");
+		}		
+		return resObj;
+	}
+	
+	public static JSONObject sendPhoneVerifyCode(String id) throws JSONException, SQLException 
+	{
+		JSONObject resObj = new JSONObject();
+		String to = "";
+		String message = "";
+		String phoneQuery = "select phone from user_details where fbuserID = \"" + id +"\"";
+		JSONObject phoneObj = DBHelper.getDBSingle(phoneQuery);
+		if(phoneObj.length() > 0)
+		{
+			Random rand = new Random();
+		    int randomNum = rand.nextInt((99999 - 10000) + 1) + 10000;
+			to = phoneObj.getString("phone");
+			message = "Hi \n\nYour phone verificatoin code is " + randomNum +" \n\nRegards\nLift Admin";
+			String codeQuery = "replace into verify_phone (fbuserID, phone, verification_code, code_validity) " +
+								"values (\""+ id + "\", \"" + to + "\", \"" + randomNum + "\", " + System.currentTimeMillis() +")";
+			int rows = DBHelper.addDBSingle(codeQuery);
+			if (rows > 0)
+			{
+				System.out.println("To = " + to);
+				System.out.println("Body = " + message);
+				HelperUtil.sendSMS(to, message );
+				resObj.put("status", "success");
+				resObj.put("message", "Phone verification code sent successfully");
+			}
+			else
+			{
+				resObj.put("status", "failure");
+				resObj.put("message", "Could not generate phone verification code. Please try later");
+			}   
+		}
+		else
+		{
+			resObj.put("status", "failure");
+			resObj.put("message", "Phone number not found. Please update phone number before verification");
+		}
+		return resObj;
+	}
+
+	public static JSONObject verifyPhone(String id, String userCode) throws JSONException, SQLException 
+	{
+		JSONObject resObj = new JSONObject();
+		String message = "Congrats: Your Phone number verified successfully";
+		String to = "";
+		String internalCode = "";
+		String emailQuery = "select phone, verification_code from verify_phone where fbuserID = \"" + id +"\"";
+		JSONObject emailObj = DBHelper.getDBSingle(emailQuery);
+		if(emailObj.length() > 0)
+		{
+			internalCode = emailObj.getString("verification_code");
+			to = emailObj.getString("phone");
+			if(internalCode.equals(userCode))
+			{
+				String codeQuery = "delete from verify_phone where fbuserID = \"" + id + "\"";
+				int rows = DBHelper.addDBSingle(codeQuery);
+				if (rows > 0)
+				{
+					System.out.println("To = " + to);
+					System.out.println("Body = " + message);
+					HelperUtil.sendSMS(to, message );
+					String verifyStatusQuery = "insert into verification_status (fbuserID, phone_status) " +
+												"values ( " + id + ", 1) on duplicate key update phone_status = 1";
+					int rcount = DBHelper.addDBSingle(verifyStatusQuery);
+					if (rcount > 0)
+					{
+						resObj.put("status", "success");
+						resObj.put("message", "Phone verified successfully");
+					}
+					else
+					{
+						resObj.put("status", "failure");
+						resObj.put("message", "Error occured while verifying phone number, Please try again");
+					}
+
+				}
+				else
+				{
+					resObj.put("status", "failure");
+					resObj.put("message", "Could not flush the phone verification code.");
+				}
+			}
+			else
+			{
+				resObj.put("status", "failure");
+				resObj.put("message", "Sorry code doesnot match. Please retry");
+			}
+		}
+		else
+		{
+			resObj.put("status", "failure");
+			resObj.put("message", "No verification code found. Please sent verication code before verification");
+		}		
+		return resObj;
+	}
+	
+	public static JSONObject getVerificatonStatus(long userID) throws JSONException 
+	{
+		JSONObject resObj = new JSONObject();
+		String verifyQuery = "select email_status, phone_status from verification_status where fbuserID = \"" + userID + "\"";
+		JSONObject verifyObj = DBHelper.getDBSingle(verifyQuery);
+		if(verifyObj.length() > 0)
+		{
+			if(verifyObj.getInt("email_status") == 1 && verifyObj.getInt("phone_status") == 1)
+			{
+				resObj.put("status", "verified");
+				resObj.put("message", "verification complete");
+			}
+			else if (verifyObj.getInt("email_status") == 1)
+			{
+				resObj.put("status", "pending");
+				resObj.put("message", "partially verified. Phone number verification pending");
+			}
+			else if(verifyObj.getInt("phone_status") == 1)
+			{
+				resObj.put("status", "pending");
+				resObj.put("message", "partially verified. Email verification pending");
+			}
+			else
+			{
+				resObj.put("status", "pending");
+				resObj.put("message", "Not verified");
+			}
+		}
+		else
+		{
+			resObj.put("status", "pending");
+			resObj.put("message", "Not verified");
+		}
+		System.out.println("result = " +  resObj);
+		return resObj;
+	}
+
+	public static JSONObject hasLockedRide(String userID, String userType) throws JSONException 
+	{
+		JSONObject resObj = new JSONObject();
+		String lockQuery = "";
+		if(userType.toUpperCase().equals("RIDER"))
+		{
+			lockQuery = "select * from online_rider where userID = \"" + userID + "\"";
+		}
+		else if (userType.toUpperCase().equals("PASSENGER"))
+		{
+			lockQuery = "select * from online_passenger where userID = \"" + userID + "\"";
+		}
+		else
+		{
+			resObj.put("status", "failure");
+			resObj.put("haslockedride", "");
+			resObj.put("data", new JSONObject());
+			return resObj;
+		}
+		
+		JSONObject lockObj = DBHelper.getDBSingle(lockQuery);
+		if(lockObj.length() > 0 )
+		{
+			resObj.put("status", "success");
+			resObj.put("haslockedride", "true");
+			resObj.put("data", lockObj);
+		}
+		else
+		{
+			resObj.put("status", "success");
+			resObj.put("haslockedride", "false");
+			resObj.put("data", new JSONObject());
+		}
+		return resObj;
+	}
+
+	public static JSONObject getPANStatus(long userID) throws JSONException 
+	{
+		JSONObject resObj = new JSONObject();
+		String panQuery = "select pan_status from user_pancard where fbuserId = \"" + userID + "\"";
+		JSONObject panObj = DBHelper.getDBSingle(panQuery);
+		if (panObj.length() > 0)
+		{
+			int panStatus = panObj.getInt("pan_status");
+			if (panStatus == 1)
+			{
+				resObj.put("staus", "success");
+				resObj.put("message", "verified");
+			}
+			else
+			{
+				resObj.put("staus", "success");
+				resObj.put("message", "verification pending");
+			}	
+		}
+		else
+		{
+			resObj.put("staus", "success");
+			resObj.put("message", "upload pending");
+		}		
+		return resObj;
+	}
+
+	public static JSONObject verifyPAN(String fbuserID, String code) throws SQLException, JSONException 
+	{
+		JSONObject resObj = new JSONObject();
+		String panQuery = "update user_pancard set pan_status = " + code + " where fbuserID = \"" + fbuserID + "\"";
+		int rcount = DBHelper.addDBSingle(panQuery);
+		if(rcount > 0)
+		{
+			resObj.put("stauts", "success");
+			resObj.put("message", "pan verification status updated successfully");
+		}
+		else
+		{
+			resObj.put("status", "failure");
+			resObj.put("message", "Trying to update status without uploading pan. Please upload PAN before verifying");
+		}
+		
+		return resObj;
+	}
+
+	public static JSONObject getDLStatus(long userID) throws JSONException 
+	{
+		JSONObject resObj = new JSONObject();
+		String dlQuery = "select dl_status from user_dl where fbuserId = \"" + userID + "\"";
+		JSONObject dlObj = DBHelper.getDBSingle(dlQuery);
+		if (dlObj.length() > 0)
+		{
+			int dlStatus = dlObj.getInt("dl_status");
+			if (dlStatus == 1)
+			{
+				resObj.put("staus", "success");
+				resObj.put("message", "verified");
+			}
+			else
+			{
+				resObj.put("staus", "success");
+				resObj.put("message", "verification pending");
+			}	
+		}
+		else
+		{
+			resObj.put("staus", "success");
+			resObj.put("message", "upload pending");
+		}		
+		return resObj;
+	}
+
+	public static JSONObject verifyDL(String fbuserID, String code) throws SQLException, JSONException 
+	{
+		JSONObject resObj = new JSONObject();
+		String dlQuery = "update user_dl set dl_status = " + code + " where fbuserID = \"" + fbuserID + "\"";
+		int rcount = DBHelper.addDBSingle(dlQuery);
+		if(rcount > 0)
+		{
+			resObj.put("stauts", "success");
+			resObj.put("message", "DL verification status updated successfully");
+		}
+		else
+		{
+			resObj.put("status", "failure");
+			resObj.put("message", "Trying to update status without uploading DL. Please upload DL before verifying");
+		}
+		
 		return resObj;
 	}
 }

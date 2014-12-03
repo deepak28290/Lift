@@ -1,6 +1,7 @@
 package indwins.c3.lift.source;
 
 import java.io.InputStream;
+import java.sql.SQLException;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -75,12 +76,11 @@ public class UserAPI
     @GET
     @Path("/getphoto")
     @Produces("image/*")
-    public Response getImage(@QueryParam("userID") String imageId) 
+    public Response getImage(@QueryParam("userID") String userID,
+    						 @QueryParam("docType") String docType) throws SQLException 
     {
-
-
-        return Response.noContent().build();
-
+    	InputStream output = UserManagement.getPhoto(userID, docType);
+		return Response.status(200).entity(output).build();
     }
     
     @GET
@@ -125,5 +125,122 @@ public class UserAPI
     	System.out.println("addappregid : appRegId = " + appReg.getAppRegID());
 		output = UserManagement.addRegID(appReg.getUserID(), appReg.getAppRegID());
 		return Response.status(200).entity(output).build();
+    }
+    
+    @POST
+    @Path("/sendemailverifycode")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response sendEmailVerifyCode(EntityId user) throws Exception
+    {
+    	JSONObject output;
+    	System.out.println("verifyEmail : userId = " + user.getId());
+		output = UserManagement.sendEmailVerifyCode(user.getId());
+		return Response.status(200).entity(output).build();
+    }
+    
+    @POST
+    @Path("/verifyemail")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response verifyEmail(VerifyUser user) throws Exception
+    {
+    	JSONObject output;
+    	System.out.println("verifyEmail : userId = " + user.getFbuserID());
+    	System.out.println("verifyEmail : code   = " + user.getCode());
+		output = UserManagement.verifyEmail(user.getFbuserID(), user.getCode());
+		return Response.status(200).entity(output).build();
+    }
+    
+    @POST
+    @Path("/sendphoneverifycode")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response sendPhoneVerifyCode(EntityId user) throws Exception
+    {
+    	JSONObject output;
+    	System.out.println("verifyEmail : userId = " + user.getId());
+		output = UserManagement.sendPhoneVerifyCode(user.getId());
+		return Response.status(200).entity(output).build();
+    }
+    
+    @POST
+    @Path("/verifyphone")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response verifyPhone(VerifyUser user) throws Exception
+    {
+    	JSONObject output;
+    	System.out.println("verifyEmail : userId = " + user.getFbuserID());
+    	System.out.println("verifyEmail : code   = " + user.getCode());
+		output = UserManagement.verifyPhone(user.getFbuserID(), user.getCode());
+		return Response.status(200).entity(output).build();
+    }
+    
+    @GET
+    @Path("/getverificationstatus")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getVerificatonStatus(@QueryParam("userID") long userID) throws Exception
+    {
+    	System.out.println("request Id =" + userID);
+		JSONObject result = UserManagement.getVerificatonStatus(userID);
+		return Response.status(200).entity(result).build();
+    }
+    
+    @GET
+    @Path("/ispanverified")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPANStatus(@QueryParam("userID") long userID) throws Exception
+    {
+    	System.out.println("request Id =" + userID);
+		JSONObject result = UserManagement.getPANStatus(userID);
+		return Response.status(200).entity(result).build();
+    }
+    
+    @POST
+    @Path("/verifypan")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response verifyPAN(VerifyUser user) throws Exception
+    {
+    	JSONObject output;
+    	System.out.println("verifyEmail : userId = " + user.getFbuserID());
+    	System.out.println("verifyEmail : code   = " + user.getCode());
+		output = UserManagement.verifyPAN(user.getFbuserID(), user.getCode());
+		return Response.status(200).entity(output).build();
+    }
+    
+    @GET
+    @Path("/isdlverified")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getDLStatus(@QueryParam("userID") long userID) throws Exception
+    {
+    	System.out.println("request Id =" + userID);
+		JSONObject result = UserManagement.getDLStatus(userID);
+		return Response.status(200).entity(result).build();
+    }
+    
+    @POST
+    @Path("/verifydl")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response verifyDL(VerifyUser user) throws Exception
+    {
+    	JSONObject output;
+    	System.out.println("verifyEmail : userId = " + user.getFbuserID());
+    	System.out.println("verifyEmail : code   = " + user.getCode());
+		output = UserManagement.verifyDL(user.getFbuserID(), user.getCode());
+		return Response.status(200).entity(output).build();
+    }
+    
+    @GET
+    @Path("/haslockedride")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response hasLockedRide(@QueryParam("userID") String userID,
+    							  @QueryParam("usertype") String userType) throws Exception
+    {
+    	System.out.println("request Id =" + userID);
+		JSONObject result = UserManagement.hasLockedRide(userID, userType);
+		return Response.status(200).entity(result).build();
     }
 }
