@@ -6,6 +6,7 @@ public class Rating
 	public String ratedUser;
 	public String rating;
 	public String comment;
+	
 	public String getRatedByUser() 
 	{
 		return ratedByUser;

@@ -70,4 +70,15 @@ public class RequestAPI
 		JSONObject result = RequestManagement.getRequestDetails(reqId);
 		return Response.status(200).entity(result).build();
     }
+    
+    @POST
+    @Path("/finishride")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response finishRide(EntityId req) throws Exception
+    {
+    	System.out.println("request Id =" + req.getId());
+		JSONObject result = RequestManagement.finishRide(req.getId());
+		return Response.status(200).entity(result).build();
+    }
+    
 }

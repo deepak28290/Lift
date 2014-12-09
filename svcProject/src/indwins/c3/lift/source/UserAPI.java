@@ -243,4 +243,59 @@ public class UserAPI
 		JSONObject result = UserManagement.hasLockedRide(userID, userType);
 		return Response.status(200).entity(result).build();
     }
+
+    @POST
+    @Path("/deleteonlineuser")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response delOnlineUser(OnlineUser olusr) throws Exception
+    {
+    	long userId = olusr.getUserID();
+    	String userType = olusr.getUserType();
+
+    	JSONObject result = UserManagement.delOnlineUser(userType, userId);
+		return Response.status(200).entity(result).build();
+    }
+    
+    @POST
+    @Path("/addvehicledetails")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response addVehicleDetails(VehicleDetails vdetails) throws Exception
+    {
+
+    	long userId = vdetails.getUserID();
+    	String vehicletype=vdetails.getVehicletype();
+    	String vehiclemodel=vdetails.getVehiclemodel();
+    	String vehiclenumber=vdetails.getVehiclenumber();
+    	String costperkm=vdetails.getCostperkm();
+    	
+    	JSONObject result = UserManagement.addVehicleDetails(userId, vehicletype, vehiclemodel, 
+    			vehiclenumber, costperkm);
+
+    	return Response.status(200).entity(result).build();
+
+    }
+   
+    
+    @GET
+    @Path("/getvehicledetails")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getVehicleDetails(@QueryParam("userID") String userId) throws Exception
+    {
+    	JSONObject output = UserManagement.getVehicleDetails(userId);
+		return Response.status(200).entity(output).build();
+    }
+ 
+    @GET
+    @Path("/hasacceptedride")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response hasAcceptedRide(@QueryParam("userID") String userID) throws Exception
+    {
+    	System.out.println("request Id =" + userID);
+		JSONObject result = UserManagement.hasAcceptedRide(userID);
+		return Response.status(200).entity(result).build();
+    }
+
+    
 }
