@@ -77,7 +77,16 @@ public class RequestAPI
     public Response finishRide(EntityId req) throws Exception
     {
     	System.out.println("request Id =" + req.getId());
-		JSONObject result = RequestManagement.finishRide(req.getId());
+		JSONObject result = RequestManagement.finishRide(req.getId(),req.getUserid());
+		return Response.status(200).entity(result).build();
+    }
+    @POST
+    @Path("/forfeitride")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response forfeitRide(EntityId req) throws Exception
+    {
+    	System.out.println("request Id =" + req.getId());
+		JSONObject result = RequestManagement.forfeitRide(req.getId(),req.getUserid());
 		return Response.status(200).entity(result).build();
     }
     

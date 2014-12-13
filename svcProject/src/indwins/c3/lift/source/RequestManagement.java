@@ -190,7 +190,7 @@ public class RequestManagement {
 								jsonArray.put(regIDS);
 								JSONObject gcmJObj = new JSONObject();
 								gcmJObj.put("collapse_key",
-										"Congrats!! Your request is accepted");
+										"Congrats!! Your lift request is accepted");
 								gcmJObj.put("registration_ids", jsonArray);
 								JSONObject dataObj = new JSONObject();
 								dataObj.put("requestID", reqID);
@@ -452,7 +452,7 @@ public class RequestManagement {
 		return resObj;
 	}
 
-	public static JSONObject finishRide(String reqID) throws JSONException,
+	public static JSONObject finishRide(String reqID,String userID) throws JSONException,
 			SQLException {
 		JSONObject resObj = new JSONObject();
 		String requesterStatus = "";
@@ -492,20 +492,24 @@ public class RequestManagement {
 				passengerId = requesterId;
 				riderId = accepterId;
 			}
-
+			int status=-1;
 			String finishRequestQuery = "update active_requests set requeststatus = \"completed\" where "
 					+ "requestID = " + reqID;
 			int finisRequestStatus = DBHelper.addDBSingle(finishRequestQuery);
 			if (finisRequestStatus > 0) {
-				int riderAcceptStatus = DBHelper
+				
+				if(riderId.equals(userID)){
+				status= DBHelper
 						.addDBSingle("update online_rider set isCompleted = 'Y',isAccepted = 'C' where userID = "
 								+ riderId);
-				int passengerAcceptStatus = DBHelper
+				}else{
+				status = DBHelper
 						.addDBSingle("update online_passenger set isCompleted = 'Y',isAccepted = 'C' where userID = "
 								+ passengerId);
-				if (riderAcceptStatus > 0 && passengerAcceptStatus > 0) {
+				}
+				if (status > 0) {
 				resObj.put("status","success");
-				resObj.put("message","Finish updated on server succesfully.");
+				resObj.put("message","Completed details updated on server succesfully.");
 				} else {
 					resObj.put("status", "failure");
 					resObj.put("message",
@@ -523,5 +527,116 @@ public class RequestManagement {
 		}
 		return resObj;
 	}
+	public static JSONObject forfeitRide(String reqID,String userID) throws JSONException,
+	SQLException {
+JSONObject resObj = new JSONObject();
+String requesterStatus = "";
+String completedStatus = "";
+String riderId = "";
+String passengerId = "";
+String requesterType = "";
+String requesterId = "";
+String accepterId = "";
+String requestQuery = "select requesterType, requesterID, accepterID from active_requests where requestID = "
+		+ reqID;
+String otherUserID="";
+JSONObject reqObj = DBHelper.getDBSingle(requestQuery);
+if (reqObj.length() > 0) {
+	requesterType = reqObj.getString("requesterType");
+	requesterId = reqObj.getString("requesterID");
+	accepterId = reqObj.getString("accepterID");
+	if (requesterType.equals("rider")) {
+		JSONObject reqStatusObj = DBHelper
+				.getDBSingle("select isCompleted from online_rider where userID = "
+						+ requesterId);
+		requesterStatus = reqStatusObj.getString("isCompleted");
+		JSONObject accStatusObj = DBHelper
+				.getDBSingle("select isCompleted from online_passenger where userID = "
+						+ accepterId);
+		completedStatus = accStatusObj.getString("isCompleted");
+		riderId = requesterId;
+		passengerId = accepterId;
+	} else if (requesterType.equals("passenger")) {
+		JSONObject reqStatusObj = DBHelper
+				.getDBSingle("select isCompleted from online_passenger where userID = "
+						+ requesterId);
+		requesterStatus = reqStatusObj.getString("isCompleted");
+		JSONObject accStatusObj = DBHelper
+				.getDBSingle("select isCompleted from online_rider where userID = "
+						+ accepterId);
+		completedStatus = accStatusObj.getString("isCompleted");
+		passengerId = requesterId;
+		riderId = accepterId;
+	}
+	int status=-1;
+	String cancelRequestQuery = "update active_requests set requeststatus = \"forfeited\",forfeitedby="+userID+" where "
+			+ "requestID = " + reqID;
+	int cancelRequestStatus = DBHelper.addDBSingle(cancelRequestQuery);
+	
+	if (cancelRequestStatus > 0) {
+		
+		if(riderId.equals(userID)){
+		status= DBHelper
+				.addDBSingle("update online_rider set isCompleted = 'N',isAccepted = 'N' where userID = "
+						+ riderId);
+		otherUserID=passengerId;
+		}else{
+		status = DBHelper
+				.addDBSingle("update online_passenger set isCompleted = 'N',isAccepted = 'N' where userID = "
+						+ passengerId);
+		otherUserID=riderId;
+		}
+		if (status > 0) {
+		resObj.put("status","success");
+		resObj.put("message","Forfeit details updated on server succesfully.");
+		} else {
+			resObj.put("status", "failure");
+			resObj.put("message",
+					"Cannot forfeit request due to server error.");
+		}
+	} else {
+		resObj.put("status", "failure");
+		resObj.put("message",
+				"Cannot forfeit request due to server error.");
+	}
+
+} else {
+	resObj.put("status", "failure");
+	resObj.put("message", "Sorry invalid requestID.");
+}
+
+//send notification to other user
+	String regCol = "registrationID";
+	String regIdQuery = "select "
+			+ regCol
+			+ " from app_registration_keys where userID = "
+			+ otherUserID;
+	JSONObject jObj = DBHelper.getDBSingle(regIdQuery);
+	if (jObj.length() > 0) {
+		String regIDS = jObj.getString(regCol)
+				.toString();
+		JSONArray jsonArray = new JSONArray();
+		jsonArray.put(regIDS);
+		JSONObject gcmJObj = new JSONObject();
+		gcmJObj.put("collapse_key",
+				"Oh Snap! User changed his mind and is not going on this route anymore!\nTry finding other users on this route.");
+		gcmJObj.put("registration_ids", jsonArray);
+		JSONObject dataObj = new JSONObject();
+		dataObj.put("requestID", reqID);
+		gcmJObj.put("data", dataObj);
+		try {
+			JSONObject resultJSONObj = pushNotify(gcmJObj);
+			if (resultJSONObj.getString("success")
+					.equals("1")) {
+				System.out
+						.println("Push Notify response:"
+								+ resultJSONObj);
+			} 
+		}catch(Exception e){
+			
+		}
+	}
+return resObj;
+}
 
 }
