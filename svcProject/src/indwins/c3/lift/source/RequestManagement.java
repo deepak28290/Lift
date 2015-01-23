@@ -428,17 +428,21 @@ public class RequestManagement {
 					+ "acc.starttime otherStartTime, "
 					+ "usr.userName otherUserName, usr.fbuserID otherFbUserID, usr.phone otherPhone, "
 					+ "usr.emailID otherEmailID, usr.gender otherGender, "
+					+ "self.userName selfUserName, self.fbuserID selfFbUserID, self.phone selfPhone, "
+					+ "self.emailID selfEmailID, self.gender selfGender,"
 					+ "ar.requesttime requestTime, ar.requestID requestId, ar.requeststatus requestStatus "
 					+ "from active_requests ar, "
 					+ requesterTable
 					+ " req, "
 					+ accepterTable
-					+ " acc, user_details usr "
+					+ " acc, user_details usr, user_details self "
 					+ "where ar.requestID = "
 					+ reqID
 					+ " and "
 					+ "ar.requesterID = req.userID and ar.accepterID = acc.userID "
-					+ "and usr.fbuserID = acc.userID";
+					+ "and usr.fbuserID = acc.userID and self.fbuserID = req.userID";
+			
+			System.out.println(requestQuery);
 			JSONObject obj = DBHelper.getDBSingle(requestQuery);
 			resObj.put("status", "success");
 			resObj.put("message", "request details successfully fetched");
