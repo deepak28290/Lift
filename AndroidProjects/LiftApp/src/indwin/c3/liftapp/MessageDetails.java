@@ -19,6 +19,13 @@ public class MessageDetails {
 		String requestId;
 		String status;
 		String type;
+		public String getReqMessage() {
+			return reqMessage;
+		}
+		public void setReqMessage(String reqMessage) {
+			this.reqMessage = reqMessage;
+		}
+		String reqMessage;
 		public String getType() {
 			return type;
 		}

@@ -6,6 +6,8 @@ import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -164,7 +166,14 @@ public class GPSTracker extends Service implements LocationListener {
         // On pressing Settings button
         alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog,int which) {
-            	((LiftAppGlobal) mContext.getApplicationContext()).setGpsOn(true);
+            	
+            	   SharedPreferences pref = getApplicationContext()
+       					.getSharedPreferences("MyPref", 0);
+            	   
+            	   Editor editor = pref.edit();
+       			editor.putBoolean("is_gps_on", true);
+       			editor.commit();
+          //  	((LiftAppGlobal) mContext.getApplicationContext()).setGpsOn(true);
             	Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 mContext.startActivity(intent);
             }

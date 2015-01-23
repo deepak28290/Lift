@@ -39,7 +39,8 @@ public class CustomAdapter extends BaseAdapter {
     private int lastPosition = -1;
 
     public View getView(int position, View convertView, ViewGroup parent) {
-        // TODO Auto-generated method stub
+      
+    	// TODO Auto-generated method stub
          View v = convertView;
          if (v == null)
          {
@@ -47,26 +48,46 @@ public class CustomAdapter extends BaseAdapter {
             v = vi.inflate(R.layout.requests_list, null);
          }
  
-           ImageView image = (ImageView) v.findViewById(R.id.userimage1);
-           TextView nameView = (TextView)v.findViewById(R.id.name1);
-           TextView ridesView = (TextView)v.findViewById(R.id.ridessofar);
-           TextView fromView = (TextView)v.findViewById(R.id.from);
-           TextView toView = (TextView)v.findViewById(R.id.to);
-           TextView timeView = (TextView)v.findViewById(R.id.time);
+           TextView reqView = (TextView)v.findViewById(R.id.reqid);
            TextView reqTime=(TextView)v.findViewById(R.id.requesttime);
+          // TextView reqStatus=(TextView)v.findViewById(R.id.requeststatus);
+           ImageView reqStatus=(ImageView)v.findViewById(R.id.reqstatus);
+           TextView reqType=(TextView)v.findViewById(R.id.requesttype);
            MessageDetails msg = _data.get(position);
-           image.setImageResource(msg.userimage);
-           nameView.setText(msg.name);
-           ridesView.setText("Rides so Far: "+msg.ridessofar);
-           fromView.setText(msg.from);                             
-           toView.setText(msg.to); 
-           timeView.setText(msg.time);
-           reqTime.setText(msg.reqtime);
+           if(msg.getType().equals("sent")){
+        	   
+           reqType.setText("You sent a lift request to "+msg.name);
+           }else{
+        	   reqType.setText("You received a lift request from "+msg.name);   
+           }
+           String reqId=msg.getRequestId();
+           reqView.setText(msg.getRequestId());
+           reqTime.setText(msg.getReqtime());
+           
+           if(msg.getStatus().equals("accepted")){
+        	   reqStatus.setImageResource(R.drawable.accepted);
+           }else if(msg.getStatus().equals("pending")){
+        	   reqStatus.setImageResource(R.drawable.pending);
+           }else if(msg.getStatus().equals("cancelled")){
+        	   reqStatus.setImageResource(R.drawable.cancelled);
+           }else if(msg.getStatus().equals("expired")){
+        	   reqStatus.setImageResource(R.drawable.expired);
+           }else if(msg.getStatus().equals("rejected")){
+        	   reqStatus.setImageResource(R.drawable.rejected);
+           }else if(msg.getStatus().equals("completed")){
+        	   reqStatus.setImageResource(R.drawable.completed);
+           }else if(msg.getStatus().equals("forfeited")){
+        	   reqStatus.setImageResource(R.drawable.forfeited);
+           }else{
+        	   reqStatus.setImageResource(R.drawable.expired);
+           }
+           
            Animation animation = AnimationUtils.loadAnimation(parent.getContext(), (position > lastPosition) ? R.anim.up_from_bottom : R.anim.down_from_top);
            v.startAnimation(animation);
            lastPosition = position;
 
         return v;
-}
+
+    }
 
 }

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/iw_bg"
+    android:gravity="center_horizontal"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="300dp"
+        android:layout_height="70dp" >
+
+        <ImageButton
+            android:id="@+id/ReqButton"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="10dp"
+            android:layout_weight=".50"
+            android:clickable="true"
+            android:focusable="false"
+            android:onClick="requestliftButton"
+            android:src="@drawable/offerlift" />
+
+	 <ImageButton
+	     android:id="@+id/profileButton"
+	     android:layout_width="150dp"
+	     android:layout_height="50dp"
+	     android:layout_alignTop="@+id/ReqButton"
+	     android:layout_toRightOf="@+id/ReqButton"
+	     android:layout_weight=".50"
+	     android:clickable="true"
+	     android:focusable="false"
+	     android:onClick="viewprofile"
+	     android:src="@drawable/viewprofile1" />
+     
+</RelativeLayout>
+</LinearLayout>

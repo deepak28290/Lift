@@ -1,6 +1,5 @@
 package indwin.c3.liftapp;
 
-import indwin.c3.liftapp.MainActivity;
 import indwin.c3.liftapp.R;
 import android.app.IntentService;
 import android.app.Notification;
@@ -71,11 +70,11 @@ public class GCMNotificationIntentService extends IntentService {
 				}
 				Log.i(TAG, "Completed work @ " + SystemClock.elapsedRealtime());
 				if(extras.getString("collapse_key").contains("accepted")){
-				sendNotification("You have a new Ride request. "
+				sendNotification("Lift: "
 						+ extras.get("collapse_key"),extras.getString("requestID"));
 				Log.i(TAG, "Received: " + extras.toString());
 				}else{
-					sendNotification("You have a new Ride request. "
+					sendNotification("Lift:  "
 							+ extras.get("collapse_key"),"-1");
 					Log.i(TAG, "Received: " + extras.toString());
 				}
@@ -98,7 +97,7 @@ public class GCMNotificationIntentService extends IntentService {
 				this).setContentTitle("Lift!")
 				.setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
 				.setContentText(msg).setDefaults(Notification.DEFAULT_SOUND |
-					      Notification.DEFAULT_VIBRATE).setSmallIcon(R.drawable.notif);
+					      Notification.DEFAULT_VIBRATE).setSmallIcon(R.drawable.lifticon);
 		mBuilder.setAutoCancel(true);
 		mBuilder.setContentIntent(contentIntent);
 		mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());

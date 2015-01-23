@@ -204,17 +204,18 @@ containing a value of this type.
         public static int title_text=0x7f010003;
     }
     public static final class color {
-        public static int com_facebook_blue=0x7f060002;
-        public static int com_facebook_likeboxcountview_border_color=0x7f060009;
-        public static int com_facebook_likeboxcountview_text_color=0x7f06000a;
-        public static int com_facebook_likebutton_text_color=0x7f060008;
-        public static int com_facebook_likeview_text_color=0x7f060007;
-        public static int com_facebook_loginview_text_color=0x7f060006;
+        public static int com_facebook_blue=0x7f060003;
+        public static int com_facebook_likeboxcountview_border_color=0x7f06000a;
+        public static int com_facebook_likeboxcountview_text_color=0x7f06000b;
+        public static int com_facebook_likebutton_text_color=0x7f060009;
+        public static int com_facebook_likeview_text_color=0x7f060008;
+        public static int com_facebook_loginview_text_color=0x7f060007;
         public static int com_facebook_picker_search_bar_background=0x7f060000;
         public static int com_facebook_picker_search_bar_text=0x7f060001;
-        public static int com_facebook_usersettingsfragment_connected_shadow_color=0x7f060004;
-        public static int com_facebook_usersettingsfragment_connected_text_color=0x7f060003;
-        public static int com_facebook_usersettingsfragment_not_connected_text_color=0x7f060005;
+        public static int com_facebook_usersettingsfragment_connected_shadow_color=0x7f060005;
+        public static int com_facebook_usersettingsfragment_connected_text_color=0x7f060004;
+        public static int com_facebook_usersettingsfragment_not_connected_text_color=0x7f060006;
+        public static int orange=0x7f060002;
     }
     public static final class dimen {
         public static int com_facebook_likeboxcountview_border_radius=0x7f050015;

@@ -6,27 +6,36 @@
     android:gravity="center_horizontal"
     android:orientation="vertical" >
 
-    <RelativeLayout
+   <RelativeLayout
         android:layout_width="300dp"
         android:layout_height="70dp" >
-     <Button
-        android:id="@+id/acceptButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=" Aceept it!"
-        android:layout_marginTop="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_below="@+id/image"
-        />
 
-       <Button
-           android:id="@+id/backButton2"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:layout_alignBaseline="@+id/acceptButton"
-           android:layout_alignBottom="@+id/acceptButton"
-           android:layout_toRightOf="@+id/acceptButton"
-           android:text="No, Wait! " />
- 
-</RelativeLayout>
+     
+        <ImageButton
+            android:id="@+id/acceptit"
+            android:layout_width="150dp"
+            android:layout_height="45dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="10dp"
+            android:layout_weight=".50"
+            android:clickable="true"
+            android:focusable="false"
+            android:onClick="acceptitButton"
+            android:src="@drawable/acceptit" />
+  <ImageButton
+            android:id="@+id/nowait"
+           android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_weight=".50"
+            android:clickable="true"
+            android:focusable="false"
+            android:onClick="nowaitButton"
+            android:src="@drawable/nowait"
+            android:layout_alignBaseline="@+id/acceptit"
+            android:layout_alignBottom="@+id/acceptit"
+            android:layout_toRightOf="@+id/acceptit" />
+    
+    </RelativeLayout>
+
 </LinearLayout>

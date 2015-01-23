@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/iw_bg"
+    android:gravity="center_horizontal"
+    android:orientation="vertical" >
+
+           <RatingBar
+            android:id="@+id/rating2"
+            style="@style/ratingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            android:layout_marginLeft="1dp"
+            android:paddingTop="5dp"
+            android:focusable="false"
+            android:numStars="5"
+            android:isIndicator="false"
+            android:rating="0" />
+               <EditText
+            android:id="@+id/txtComment"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+             android:textSize="15sp"
+            android:hint="Comment"
+            android:padding="8dp"
+            />
+        
+    <RelativeLayout
+        android:layout_width="300dp"
+        android:layout_height="70dp" >
+
+        <ImageButton
+            android:id="@+id/submitRatingButton"
+            android:layout_width="150dp"
+            android:layout_height="45dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:clickable="true"
+            android:focusable="false"
+            android:gravity="center"
+            android:onClick="submitratingButton"
+            android:src="@drawable/submitrating" />
+ 
+</RelativeLayout>
+</LinearLayout>

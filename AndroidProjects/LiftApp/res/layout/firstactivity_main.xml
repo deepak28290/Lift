@@ -1,107 +1,144 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-   
     android:orientation="vertical" >
 
-    <!--
-      <com.facebook.widget.LoginButton
-        android:id="@+id/authButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="30dp"
-        />
-    -->
-
-    <LinearLayout
+    <indwin.c3.liftapp.utils.MapWrapperLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map_relative_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal" >
+        tools:context=".MainActivity" >
 
-        <TextView
-            android:id="@+id/textView1"
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.MapFragment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:text="Plan your trip!" />
-    </LinearLayout>
+            android:layout_alignParentLeft="true" />
+    </indwin.c3.liftapp.utils.MapWrapperLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal" >
 
-        <EditText
+        <indwin.c3.liftapp.CustomAutoCompleteTextView
             android:id="@+id/sourceaddress"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/textView1"
+            android:layout_marginLeft="5dp"
             android:layout_weight="1"
+            android:background="@drawable/oval"
             android:ems="10"
             android:hint="Pickup Landmark?"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:padding="8dp" />
 
-        <EditText
+        <indwin.c3.liftapp.CustomAutoCompleteTextView
             android:id="@+id/destinationaddress"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/textView1"
+            android:layout_marginLeft="5dp"
             android:layout_weight="1"
+            android:background="@drawable/oval"
             android:ems="10"
             android:hint="Destination Landmark?"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:padding="8dp" />
 
-      
+        <ImageView
+            android:id="@+id/plot"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_weight=".20"
+            android:clickable="true"
+            android:focusable="false"
+            android:onClick="plotClicked"
+            android:src="@drawable/plot" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginTop="55dp"
         android:orientation="horizontal" >
 
         <EditText
             android:id="@+id/txtDate"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:clickable="false"
+            android:layout_weight=".40"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/oval"
+            android:clickable="true"
             android:cursorVisible="false"
             android:focusable="false"
             android:focusableInTouchMode="false"
-            android:hint="Pickup Date"
-            android:visibility="gone"
-            >
-        </EditText>
-
-        <Button
-            android:id="@+id/btnCalendar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:hint="Lift Time?"
             android:onClick="datepickerClicked"
-            android:text="Choose Trip Time"
-            >
+            android:padding="8dp"
+            android:textSize="15sp"
+            android:visibility="gone" />
 
-        </Button>
-          <Button
-            android:id="@+id/button2"
-            android:layout_width="110dp"
-            android:layout_height="wrap_content"
+        <ImageView
+            android:id="@+id/refresh"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_weight=".20"
+            android:clickable="true"
+            android:focusable="false"
+            android:onClick="clickRefresh"
+            android:src="@drawable/refresh" />
+
+        <ImageView
+            android:id="@+id/clock"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_weight=".20"
+            android:clickable="true"
+            android:focusable="false"
+            android:onClick="datepickerClicked"
+            android:src="@drawable/watch" />
+
+        <ImageView
+            android:id="@+id/lockride"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_weight=".20"
+            android:clickable="true"
+            android:focusable="false"
             android:onClick="submitClicked"
-            android:text="Lock Ride!"
-         />
- </LinearLayout>
-
-    <fragment
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.MapFragment"
+            android:src="@drawable/unlocked" />
+    </LinearLayout>
+  <LinearLayout
+           android:id="@+id/croutonid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_marginTop="135dp" />
-
-</RelativeLayout>
+        android:orientation="horizontal"
+        android:layout_gravity="bottom" >
+      
+    </LinearLayout>
+    <LinearLayout
+android:id="@+id/overlay"
+android:layout_width="fill_parent"
+android:layout_height="fill_parent"
+android:layout_gravity="center"
+android:background="#a6000000" 
+android:orientation="horizontal"
+android:visibility="gone">
+          <ProgressBar
+        android:id="@+id/progressBar1"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="150dp"
+        android:gravity="bottom"
+        android:visibility="visible" />
+</LinearLayout>
+</FrameLayout>

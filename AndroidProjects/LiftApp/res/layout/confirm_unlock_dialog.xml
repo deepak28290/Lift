@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/iw_bg"
+    android:gravity="center_horizontal"
+    android:orientation="vertical" >
+     <TextView
+            android:id="@+id/namefinal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="7dp"
+            android:clickable="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:padding="2dp"
+            android:paddingTop="15dp"
+            android:text="Note: You will become invisible to other users.\n\nAlso, All your pending requests on this route will expire automatically!"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    <RelativeLayout
+        android:layout_width="300dp"
+        android:layout_height="70dp"
+         android:padding="1dp"
+         android:layout_marginBottom="10dp" >
+
+        <ImageButton
+            android:id="@+id/ReqButton"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginLeft="10dp"
+            android:layout_weight=".50"
+            android:clickable="true"
+            android:focusable="false"
+            android:onClick="requestliftButton"
+            android:src="@drawable/hidelift" />
+
+	 <ImageButton
+	     android:id="@+id/nowaitButton"
+	     android:layout_width="150dp"
+	     android:layout_height="50dp"
+	     android:layout_alignTop="@+id/ReqButton"
+	     android:layout_toRightOf="@+id/ReqButton"
+	     android:layout_weight=".50"
+	     android:clickable="true"
+	     android:focusable="false"
+	     android:onClick="viewprofile"
+	     android:src="@drawable/nowait" />
+     
+</RelativeLayout>
+</LinearLayout>

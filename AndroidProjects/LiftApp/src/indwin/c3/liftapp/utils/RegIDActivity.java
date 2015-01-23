@@ -1,6 +1,6 @@
 package indwin.c3.liftapp.utils;
 
-import indwin.c3.liftapp.LandingActivity;
+import indwin.c3.liftapp.DrawerHomeActivity;
 
 import java.io.IOException;
 
@@ -48,7 +48,7 @@ public class RegIDActivity extends Activity{
 	            }
 	      }
 	         
-	         Intent i = new Intent(this, LandingActivity.class);
+	         Intent i = new Intent(this, DrawerHomeActivity.class);
 	 		startActivity(i);
 	 }
 

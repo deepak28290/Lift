@@ -11,7 +11,7 @@
     <permission
         android:name="indwin.c3.liftapp.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
-	
+
     <uses-permission android:name="indwin.c3.liftapp.permission.C2D_MESSAGE" />
     <uses-permission android:name="indwin.c3.liftapp.permission.MAPS_RECEIVE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -20,10 +20,12 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <!-- Required to show current location -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <uses-sdk
         android:minSdkVersion="16"
@@ -32,7 +34,7 @@
     <application
         android:name="LiftAppGlobal"
         android:allowBackup="true"
-        android:icon="@drawable/bg"
+        android:icon="@drawable/lifticon"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
@@ -58,19 +60,17 @@
 
         <activity
             android:name="com.facebook.LoginActivity"
-            android:label="Lift Login" >
+            android:label="Login" >
         </activity>
         <activity
             android:name="FirstActivity"
-            android:label="Share your Ride!" >
-        </activity>
-        <activity
-            android:name="LandingActivity"
-            android:label="Lift?" >
+            android:label="Give a Lift!"
+            android:windowSoftInputMode="stateHidden|adjustResize" >
         </activity>
         <activity
             android:name="PassengerActivity"
-            android:label="Find a Lift!" >
+            android:label="Find a Lift!"
+            android:windowSoftInputMode="stateHidden|adjustResize" >
         </activity>
         <activity
             android:name="MapActivity"
@@ -82,34 +82,53 @@
         </activity>
         <activity
             android:name="MyRequestsActivity"
-            android:label="View All Requests" >
+            android:label="View Lift Requests" >
         </activity>
         <activity
             android:name="SidePanel"
-            android:label="Lift Menu" >
+            android:label="Menu" >
         </activity>
         <activity
             android:name="RequestDetailsActivity"
-            android:label="Details" >
+            android:label="Request Details" >
         </activity>
-         <activity
+        <activity
             android:name="PassengerActivity2"
-            android:label="Take a lift" >
+            android:label="Find a lift" >
         </activity>
         <activity
             android:name="NotifLanding"
-            android:label="Lift?" >
+            android:label="Welcome! " >
         </activity>
         <activity
             android:name="DrawerHomeActivity"
-            android:label="Lift?" >
-                  
+            android:label="Welcome! " >
         </activity>
         <activity
             android:name="AcceptedActivity"
             android:label="Get ready to ride!" >
         </activity>
-
+        <activity
+            android:name="ProfileActivity"
+            android:label="Profile!"
+            android:windowSoftInputMode="stateVisible|adjustResize" >
+        </activity>
+        <activity
+            android:name="FBLogout"
+            android:label="See you again!" >
+        </activity>
+        <activity
+            android:name="VerifyActivity"
+            android:label="Account Status" >
+        </activity>
+         <activity
+            android:name="AutoMain"
+            android:label="Lift- Google Places" >
+        </activity>
+         <activity
+            android:name="PublicProfileActivity"
+            android:label="User Profile" >
+        </activity>
         <receiver
             android:name="indwin.c3.liftapp.GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >

@@ -9,28 +9,34 @@
         android:layout_height="40dp"
         android:orientation="horizontal" >
 
-        <TextView
+        <!--
+             <TextView
             android:id="@+id/requestsHeading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:text="All Pending Requests"
             android:textAppearance="?android:attr/textAppearanceLarge" />
+        -->
 
-          <ToggleButton 
-    android:id="@+id/togglebutton"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:textOn="Sent"
-    android:textOff="Received"
-    android:onClick="onToggleClicked"/>
+        <ToggleButton
+            android:id="@+id/togglebutton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/check"
+            android:layout_margin="5dp"
+            android:onClick="onToggleClicked"
+            android:textOff=""
+            android:textOn="" />
     </LinearLayout>
 
     <ListView
         android:id="@+id/MessageList"
         android:layout_width="match_parent"
         android:layout_height="0dip"
-        android:layout_weight="1" >
+        android:layout_weight="1"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="10.0sp" >
     </ListView>
 
 </LinearLayout>

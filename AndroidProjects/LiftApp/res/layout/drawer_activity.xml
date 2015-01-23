@@ -1,29 +1,147 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_alignParentBottom="true"
     android:layout_weight=".20"
-    android:background="@drawable/lift_green"
     android:orientation="horizontal" >
-
-    <ImageView
-        android:id="@+id/take"
+ <!--  android:background="@drawable/hitch" -->
+    <ProgressBar
+        android:id="@+id/progressBar3"
+        style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight=".50"
-        android:clickable="true"
-        android:focusable="false"
-        android:onClick="takeLiftClicked"
-        android:src="@drawable/btn1_landing" />
+        android:layout_gravity="center"
+        android:layout_marginLeft="130dp"
+        android:visibility="visible" />
 
+    <LinearLayout
+        android:id="@+id/landingprof"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/border"
+        android:orientation="horizontal"
+        android:visibility="gone" >
+
+        <ImageView
+            android:id="@+id/profpicD"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:gravity="right"
+            android:visibility="visible" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/profnameD"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="#ffffff"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:gravity="center" />
+
+               
+         <LinearLayout
+        android:id="@+id/ratingcontent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        >
+        
+        <TextView
+            android:id="@+id/rides"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textColor="@android:color/white"
+            android:hint="Rides so Far: "
+             android:textStyle="bold"
+            android:paddingTop="4dp"
+             android:paddingRight="4dp"  />
+        
+          
+</LinearLayout>
+         <RatingBar
+            android:id="@+id/rating2"
+            style="@style/ratingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            android:layout_marginLeft="1dp"
+            android:paddingTop="5dp"
+            android:focusable="false"
+            android:numStars="5"
+            android:isIndicator="true"
+            android:rating="0" />
+        </LinearLayout>
+    </LinearLayout>
     <ImageView
         android:id="@+id/give"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="2dp"
+         android:layout_marginBottom="15dp"
         android:layout_weight=".50"
         android:clickable="true"
         android:focusable="false"
         android:onClick="giveLiftClicked"
-        android:src="@drawable/btn2_landing" />
+        android:src="@drawable/givelift" />
 
+    <ImageView
+        android:id="@+id/take"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="1dp"
+        android:layout_marginBottom="15dp"
+        android:layout_weight=".50"
+        android:clickable="true"
+        android:focusable="false"
+        android:onClick="takeLiftClicked"
+        android:src="@drawable/findlift" />
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:clickable="false"
+        android:focusable="false"
+        android:src="@drawable/lift_e" />
+<LinearLayout
+android:id="@+id/overlay"
+android:layout_width="fill_parent"
+android:layout_height="fill_parent"
+android:layout_gravity="center"
+android:background="#a6000000" 
+android:orientation="horizontal"
+android:visibility="gone">
+          <ProgressBar
+        android:id="@+id/progressBar1"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="150dp"
+        android:gravity="bottom"
+        android:visibility="visible" />
 </LinearLayout>
+</RelativeLayout>

@@ -9,24 +9,32 @@
     <RelativeLayout
         android:layout_width="300dp"
         android:layout_height="70dp" >
-     <Button
-        android:id="@+id/ReqButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=" Request a Ride "
-        android:layout_marginTop="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_below="@+id/image"
-        />
 
-       <Button
-           android:id="@+id/profileButton"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:layout_alignBaseline="@+id/ReqButton"
-           android:layout_alignBottom="@+id/ReqButton"
-           android:layout_toRightOf="@+id/ReqButton"
-           android:text=" View Profile " />
- 
+        <ImageButton
+            android:id="@+id/ReqButton"
+            android:layout_width="150dp"
+            android:layout_height="45dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="10dp"
+            android:layout_weight=".50"
+            android:clickable="true"
+            android:focusable="false"
+            android:onClick="requestliftButton"
+            android:src="@drawable/requestlift" />
+
+	 <ImageButton
+            android:id="@+id/profileButton"
+           android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_weight=".50"
+            android:clickable="true"
+            android:focusable="false"
+            android:onClick="viewprofile"
+            android:src="@drawable/viewprofile1"
+            android:layout_alignBaseline="@+id/ReqButton"
+            android:layout_alignBottom="@+id/ReqButton"
+            android:layout_toRightOf="@+id/ReqButton" />
+     
 </RelativeLayout>
 </LinearLayout>

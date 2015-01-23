@@ -8,14 +8,17 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import indwin.c3.liftapp.pojos.MessageListE;
 import indwin.c3.liftapp.utils.GPSTracker;
-import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -29,7 +32,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-
 public class MyRequestsActivity extends SidePanel {
 	GPSTracker gps;
 	ListView msgList;
@@ -47,8 +49,9 @@ public class MyRequestsActivity extends SidePanel {
 						0);
 				toast.show();
 				Intent i = new Intent(getApplicationContext(),
-						LandingActivity.class);
+						DrawerHomeActivity.class);
 				startActivity(i);
+				finish();
 			} else if (msg.obj.equals("norequests")) {
 				Toast toast = Toast.makeText(getApplicationContext(),
 						"No new requests", Toast.LENGTH_LONG);
@@ -99,50 +102,40 @@ public class MyRequestsActivity extends SidePanel {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 
-				TextView tv = (TextView) findViewById(R.id.name1);
-				for (int n = 0; n < details.size(); n++) {
-					if (details.get(n).getName() == tv.getText().toString()) { // change
-																				// to
-																				// userids
-																				// instead
-																				// of
-																				// name
-																				// once
-																				// u
-																				// have
-																				// correct
-																				// name
-																				// from
-																				// api
-						((LiftAppGlobal) getApplication())
-								.setMsgdetails(details.get(n));
+				TextView tv = (TextView) findViewById(R.id.reqid);
+		/*		for (int n = 0; n < details.size(); n++) {
+					String req=details.get(n).getRequestId();
+					String r2=tv.getText().toString();*/
+		//			if (details.get(n).getRequestId().equals(tv.getText().toString())) { 
+			((LiftAppGlobal) getApplication())
+								.setMsgdetails(details.get(position));
 
 						Intent i = new Intent(getApplicationContext(),
 								RequestDetailsActivity.class);
 						startActivity(i);
-						break;
+				//		finish();
+				/*		break;
 					}
-				}
-				/*
-				 * RelativeLayout rel = (RelativeLayout)
-				 * findViewById(R.id.listid); LinearLayout relsmall =
-				 * (LinearLayout) findViewById(R.id.listsmallid); if
-				 * (rel.getVisibility() == View.VISIBLE) {
-				 * rel.setVisibility(View.GONE);
-				 * relsmall.setVisibility(View.VISIBLE); } else {
-				 * relsmall.setVisibility(View.GONE);
-				 * rel.setVisibility(View.VISIBLE); }
-				 */
+				}*/
+			
 			}
 
 		});
 		new Thread() {
 			public void run() {
 				try {
-					HttpClient myClient = new DefaultHttpClient();
+					HttpParams httpParameters = new BasicHttpParams();
+					HttpConnectionParams.setConnectionTimeout(
+							httpParameters, 5000);
+					HttpClient myClient = new DefaultHttpClient(
+							httpParameters);
+
 					MessageDetails Detail;
-					String userid = ((LiftAppGlobal) getApplication())
-							.getUserId();
+					SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0);
+					String userid= pref.getString("user_id", null);
+					
+					/*String userid = ((LiftAppGlobal) getApplication())
+							.getUserId();*/
 					String call_url = getApplicationContext().getString(
 							R.string.server_url)
 							+ "/request/myrequests?userID="
@@ -165,14 +158,14 @@ public class MyRequestsActivity extends SidePanel {
 						JSONArray respArr = new JSONArray(responseString);
 
 						JSONObject respObj;
+						
 						if (respArr.length() == 0) {
 							Message m_norequests = new Message();
 							m_norequests.obj = "norequests";
 							handler.sendMessage(m_norequests);
 						}
 
-						for (int i = 0; i < respArr.length(); i++) {
-							
+						for (int i =( respArr.length()-1); i >-1; i--) {
 							
 							respObj = (JSONObject) respArr.get(i);
 							/*
@@ -182,7 +175,7 @@ public class MyRequestsActivity extends SidePanel {
 							 * "murugeshpalaya", otherStartTime: 1420050600000,
 							 * requestTime: 1415052885832
 							 */// handle already sent/received req case
-							if(!respObj.getString("requestStatus").equals("pending")){
+							if(respObj.getString("requestStatus").equals("accepted")){
 								//do nothing
 							}else{
 							String selfSource = respObj.getString("selfSource");
@@ -203,11 +196,13 @@ public class MyRequestsActivity extends SidePanel {
 							String destOtherCoord=respObj.getString("otherDestGeoCode");
 							String requestId=respObj.getString("requestId");
 							String status=respObj.getString("requestStatus");
+							String name=respObj.getString("otherUserName");
+							String otherUserID=respObj.getString("otherFbUserID");
 							Date reqTime = new Date(requestTime);
 							Date requestDate = new Date(requestTime);
 								Detail = new MessageDetails();
 								Detail.setUserimage(R.drawable.boy);
-								Detail.setName(userid);
+								Detail.setName(name);
 								Detail.setRidessofar("10");
 								Detail.setDesc1("500m from your start location");
 								Detail.setFrom("From " + otherSource);
@@ -218,12 +213,13 @@ public class MyRequestsActivity extends SidePanel {
 								Detail.setSrcOtherCoord(srcOtherCoord);
 								Detail.setDesSelfCoord(destSelfCoord);
 								Detail.setDesOtherCoord(destOtherCoord);
-								Detail.setUserid(userid);
+								Detail.setUserid(otherUserID);  
 								Detail.setRequestId(requestId);
 								Detail.setStatus(status);
 								Detail.setType(requestType);
+								
 								details.add(Detail);
-						}
+			}
 
 						Message msg = new Message();
 						MessageListE msgListE = new MessageListE();
@@ -250,6 +246,5 @@ public class MyRequestsActivity extends SidePanel {
 		}.start();
 
 	}
-	
 
 }

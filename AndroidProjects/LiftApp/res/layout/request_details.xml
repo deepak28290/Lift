@@ -8,7 +8,11 @@
     android:orientation="vertical"
     android:textColor="#FFFFFF"
     android:visibility="visible" >
-
+<!-- <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical" > -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -24,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_weight=".20"
             android:focusable="false"
-            android:src="@drawable/boy" />
+            />
 
         <TextView
             android:id="@+id/name2"
@@ -44,23 +48,35 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:focusable="false"
-            android:isIndicator="false"
+            android:isIndicator="true"
             android:numStars="5"
             android:rating="3.5" />
     </LinearLayout>
-
+    
+   <!--    <TextView
+            android:id="@+id/lifttime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+              android:layout_marginTop="10dp"
+            android:focusable="false"
+            android:text="Lift Time: "
+            android:textSize="18sp" />
+    </LinearLayout> -->
     <fragment
         android:id="@+id/map_req2"
         android:name="com.google.android.gms.maps.MapFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="100dp"
         android:layout_marginBottom="70dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="70dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal" >
 
@@ -72,7 +88,7 @@
             android:clickable="true"
             android:focusable="false"
             android:onClick="clickAdd"
-            android:src="@drawable/tree" />
+            android:src="@drawable/accept" />
 
         <ImageView
             android:id="@+id/cancelimage2"
@@ -82,7 +98,7 @@
             android:clickable="true"
             android:focusable="false"
             android:onClick="clickCancel"
-            android:src="@drawable/notree" />
+            android:src="@drawable/cancel" />
 
         <ImageView
             android:id="@+id/profimage2"
@@ -92,7 +108,7 @@
             android:clickable="true"
             android:focusable="false"
             android:onClick="clickProf"
-            android:src="@drawable/prof_req" />
+            android:src="@drawable/profile" />
     </LinearLayout>
 
 </RelativeLayout>

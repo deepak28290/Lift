@@ -1,5 +1,6 @@
 package indwin.c3.liftapp;
 
+import indwin.c3.liftapp.pojos.LockedLiftPojo;
 import android.app.Application;
 
 public class LiftAppGlobal extends Application {
@@ -12,6 +13,34 @@ public class LiftAppGlobal extends Application {
 	private MessageDetails msgdetails;
 	private boolean isNotif=false;
 	private String reqid="reqid";
+	private boolean fblogout=false;
+	private LockedLiftPojo llp;
+	private String pubUserId;
+
+	public String getPubUserId() {
+		return pubUserId;
+	}
+
+	public void setPubUserId(String pubUserId) {
+		this.pubUserId = pubUserId;
+	}
+
+	public LockedLiftPojo getLlp() {
+		return llp;
+	}
+
+	public void setLlp(LockedLiftPojo llp) {
+		this.llp = llp;
+	}
+
+	public boolean isFblogout() {
+		return fblogout;
+	}
+
+	public void setFblogout(boolean fblogout) {
+		this.fblogout = fblogout;
+	}
+
 	public String getReqid() {
 		return reqid;
 	}

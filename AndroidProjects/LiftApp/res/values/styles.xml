@@ -14,7 +14,19 @@
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
+            <item name="android:fontFamily">monoface</item>
+            <item name="android:actionBarStyle">@style/MyActionBar</item>
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+    <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:background">#FFC000</item>
+        <item name="android:textColor">@android:color/white</item>
+            <item name="android:titleTextStyle">@style/AppTextColor</item>
+        
+    </style>
+    
+     <style name="AppTextColor" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@android:color/white</item>
     </style>
     <style name="ratingBar" parent="@android:style/Widget.RatingBar">
         <item name="android:progressDrawable">@drawable/ratingstars</item>
